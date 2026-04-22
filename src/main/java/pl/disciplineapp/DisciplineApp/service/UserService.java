@@ -2,6 +2,8 @@ package pl.disciplineapp.DisciplineApp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
+import pl.disciplineapp.DisciplineApp.entity.User;
 import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 
@@ -9,6 +11,16 @@ import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
+    public UserResponse getUserResponse(Long userId) {
+        throwIfIdIsNotValid(userId);
+        return UserResponse.fromEntity(getUserOrThrowIfNotExist(userId));
+    }
+
+    private User getUserOrThrowIfNotExist(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("User not found"));
+    }
 
     private void throwIfIdIsNotValid(Long userId) {
         if (userId == null || userId <= 0) {

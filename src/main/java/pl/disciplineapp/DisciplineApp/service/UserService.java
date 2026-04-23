@@ -17,6 +17,11 @@ public class UserService {
         return UserResponse.fromEntity(getUserOrThrowIfNotExist(userId));
     }
 
+    public void deleteUser(Long userId) {
+        throwIfIdIsNotValid(userId);
+        userRepository.delete(getUserOrThrowIfNotExist(userId));
+    }
+
     private User getUserOrThrowIfNotExist(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("User not found"));

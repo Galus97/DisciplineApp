@@ -2,6 +2,7 @@ package pl.disciplineapp.DisciplineApp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.entity.User;
 import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
@@ -20,6 +21,19 @@ public class UserService {
     public void deleteUser(Long userId) {
         throwIfIdIsNotValid(userId);
         userRepository.delete(getUserOrThrowIfNotExist(userId));
+    }
+
+    
+
+    private User buildUser(UserRequest userRequest) {
+        return User.builder()
+                .firstName(userRequest.getFirstName())
+                .lastName(userRequest.getLastName())
+                .email(userRequest.getEmail())
+                .password(userRequest.getPassword())
+                .enabled(userRequest.getEnabled())
+                .isSubscriber(userRequest.getIsSubscriber())
+                .build();
     }
 
     private User getUserOrThrowIfNotExist(Long userId) {

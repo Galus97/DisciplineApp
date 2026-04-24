@@ -23,7 +23,10 @@ public class UserService {
         userRepository.delete(getUserOrThrowIfNotExist(userId));
     }
 
-    
+    public UserResponse saveNewUser(UserRequest userRequest) {
+
+        return UserResponse.fromEntity(buildUser(userRequest));
+    }
 
     private User buildUser(UserRequest userRequest) {
         return User.builder()

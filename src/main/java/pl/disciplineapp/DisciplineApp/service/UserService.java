@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public UserResponse saveNewUser(UserRequest userRequest) {
-
+        throwIfRequestIsNull(userRequest);
         return UserResponse.fromEntity(buildUser(userRequest));
     }
 
@@ -37,6 +37,12 @@ public class UserService {
                 .enabled(userRequest.getEnabled())
                 .isSubscriber(userRequest.getIsSubscriber())
                 .build();
+    }
+
+    private void throwIfRequestIsNull(UserRequest userRequest) {
+        if (userRequest == null) {
+            throw new IllegalArgumentException("UserRequest is null");
+        }
     }
 
     private User getUserOrThrowIfNotExist(Long userId) {

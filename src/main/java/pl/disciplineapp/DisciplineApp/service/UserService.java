@@ -2,6 +2,7 @@ package pl.disciplineapp.DisciplineApp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.entity.User;
@@ -12,6 +13,7 @@ import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final MessageService messageService;
 
     public UserResponse getUserResponse(Long userId) {
         throwIfIdIsNotValid(userId);

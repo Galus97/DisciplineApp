@@ -2,6 +2,8 @@ package pl.disciplineapp.DisciplineApp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
+import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.entity.User;
@@ -12,6 +14,7 @@ import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final MessageService messageService;
 
     public UserResponse getUserResponse(Long userId) {
         throwIfIdIsNotValid(userId);
@@ -41,18 +44,18 @@ public class UserService {
 
     private void throwIfRequestIsNull(UserRequest userRequest) {
         if (userRequest == null) {
-            throw new IllegalArgumentException("UserRequest is null");
+            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.USER_REQUEST_IS_NULL));
         }
     }
 
     private User getUserOrThrowIfNotExist(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("User not found"));
+                () -> new UserNotFoundException(messageService.getMessage(ErrorMessages.USER_NOT_FOUND)));
     }
 
     private void throwIfIdIsNotValid(Long userId) {
         if (userId == null || userId <= 0) {
-            throw new UserNotFoundException("User with id " + userId + " not found");
+            throw new UserNotFoundException(messageService.getMessage(ErrorMessages.INVALID_USER_ID));
         }
     }
 }

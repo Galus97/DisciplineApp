@@ -1,6 +1,7 @@
 package pl.disciplineapp.DisciplineApp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
@@ -10,11 +11,14 @@ import pl.disciplineapp.DisciplineApp.entity.User;
 import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final MessageService messageService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse getUserResponse(Long userId) {
         throwIfIdIsNotValid(userId);

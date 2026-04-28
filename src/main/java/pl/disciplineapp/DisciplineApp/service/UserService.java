@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
+import pl.disciplineapp.DisciplineApp.component.RegisterValidator;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.entity.User;
@@ -19,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final MessageService messageService;
     private final PasswordEncoder passwordEncoder;
+    private final RegisterValidator registerValidator;
 
     public UserResponse getUserResponse(Long userId) {
         throwIfIdIsNotValid(userId);
@@ -32,6 +34,8 @@ public class UserService {
 
     public UserResponse saveNewUser(UserRequest userRequest) {
         throwIfRequestIsNull(userRequest);
+        User user = buildUser(userRequest);
+
         return UserResponse.fromEntity(buildUser(userRequest));
     }
 
@@ -43,6 +47,7 @@ public class UserService {
         existingUser.setFirstName(userRequest.getFirstName());
         existingUser.setLastName(userRequest.getLastName());
         existingUser.setEmail(userRequest.getEmail());
+
         existingUser.setPassword(userRequest.getPassword());
     }
 

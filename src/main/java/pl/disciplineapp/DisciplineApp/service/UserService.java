@@ -35,12 +35,23 @@ public class UserService {
         return UserResponse.fromEntity(buildUser(userRequest));
     }
 
+        public UserResponse updateUser(UserRequest userRequest) {
+        throwIfRequestIsNull(userRequest);
+        throwIfIdIsNotValid(userRequest.getUserId());
+
+        User existingUser = getUserOrThrowIfNotExist(userRequest.getUserId());
+        existingUser.setFirstName(userRequest.getFirstName());
+        existingUser.setLastName(userRequest.getLastName());
+        existingUser.setEmail(userRequest.getEmail());
+        existingUser.setPassword(userRequest.getPassword());
+    }
+
     private User buildUser(UserRequest userRequest) {
         return User.builder()
                 .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
                 .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .enabled(userRequest.getEnabled())
                 .isSubscriber(userRequest.getIsSubscriber())
                 .build();

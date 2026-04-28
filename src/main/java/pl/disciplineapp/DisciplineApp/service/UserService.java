@@ -43,7 +43,7 @@ public class UserService {
         }
     }
 
-        public UserResponse updateUser(UserRequest userRequest) {
+    public UserResponse updateUser(UserRequest userRequest) {
         throwIfRequestIsNull(userRequest);
         throwIfIdIsNotValid(userRequest.getUserId());
 
@@ -52,7 +52,11 @@ public class UserService {
         existingUser.setLastName(userRequest.getLastName());
         existingUser.setEmail(userRequest.getEmail());
 
-        existingUser.setPassword(userRequest.getPassword());
+        if(userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        }
+
+        return UserResponse.fromEntity(userRepository.save(existingUser));
     }
 
     private User buildUser(UserRequest userRequest) {

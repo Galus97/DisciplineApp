@@ -10,6 +10,7 @@ import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.entity.User;
 import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
+import pl.disciplineapp.DisciplineApp.exception.ValidationException;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 
 import java.util.Optional;
@@ -32,11 +33,14 @@ public class UserService {
         userRepository.delete(getUserOrThrowIfNotExist(userId));
     }
 
-    public UserResponse saveNewUser(UserRequest userRequest) {
+    public UserResponse saveNewUser(UserRequest userRequest) throws ValidationException {
         throwIfRequestIsNull(userRequest);
         User user = buildUser(userRequest);
-
-        return UserResponse.fromEntity(buildUser(userRequest));
+        if(registerValidator.validateUser(user).isEmpty()){
+            return UserResponse.fromEntity(buildUser(userRequest));
+        } else {
+            throw new ValidationException(registerValidator.validateUser(user));
+        }
     }
 
         public UserResponse updateUser(UserRequest userRequest) {

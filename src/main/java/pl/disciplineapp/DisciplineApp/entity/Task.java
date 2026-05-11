@@ -34,4 +34,6 @@ public class Task {
 
     @NotBlank
     private String description;
+
+    private boolean completed;
 }

@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -36,4 +38,10 @@ public class Task {
     private String description;
 
     private boolean completed;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime completedAt;
+
+    private LocalDateTime deadline;
 }

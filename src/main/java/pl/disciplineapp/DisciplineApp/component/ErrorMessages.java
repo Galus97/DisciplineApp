@@ -11,4 +11,5 @@ public final class ErrorMessages {
 
     //TASK
     public static final String INVALID_TASK_ID = "error.invalidTaskId";
+    public static final String TASK_REQUEST_IS_NULL = "error.taskRequestIsNull";
 }

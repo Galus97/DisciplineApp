@@ -19,7 +19,11 @@ public class TaskService {
         throwIfIdIsNotValid(taskId);
         return TaskResponse.fromEntity(taskRepository.findById(taskId).orElseThrow());
     }
-    
+
+    public TaskResponse saveTask(TaskRequest taskRequest) {
+        throwIfRequestIsNull(taskRequest);
+        return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
+    }
 
     private Task buildTask(TaskRequest taskRequest) {
         return Task.builder()

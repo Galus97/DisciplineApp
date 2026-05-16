@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
+import pl.disciplineapp.DisciplineApp.dto.request.TaskRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
 
@@ -16,6 +17,12 @@ public class TaskService {
     public TaskResponse getTaskResponse(Long taskId) {
         throwIfIdIsNotValid(taskId);
         return TaskResponse.fromEntity(taskRepository.findById(taskId).orElseThrow());
+    }
+
+    private void throwIfRequestIsNull(TaskRequest taskRequest) {
+        if (taskRequest == null) {
+            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.TASK_REQUEST_IS_NULL));
+        }
     }
 
 

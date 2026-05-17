@@ -25,6 +25,11 @@ public class TaskService {
         return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
     }
 
+    public void deleteTask(Long taskId) {
+        throwIfIdIsNotValid(taskId);
+        taskRepository.deleteById(taskId);
+    }
+
     private Task buildTask(TaskRequest taskRequest) {
         return Task.builder()
                 .taskName(taskRequest.getTaskName())

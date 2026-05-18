@@ -28,7 +28,7 @@ public class TaskService {
 
     public void deleteTask(Long taskId) {
         throwIfIdIsNotValid(taskId);
-        taskRepository.deleteById(taskId);
+        taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
     }
     
 

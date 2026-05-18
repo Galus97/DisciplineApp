@@ -7,6 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.TaskRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.entity.Task;
+import pl.disciplineapp.DisciplineApp.exception.TaskNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
 
 @Service
@@ -17,7 +18,7 @@ public class TaskService {
 
     public TaskResponse getTaskResponse(Long taskId) {
         throwIfIdIsNotValid(taskId);
-        return TaskResponse.fromEntity(taskRepository.findById(taskId).orElseThrow());
+        return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
     }
 
     public TaskResponse saveTask(TaskRequest taskRequest) {
@@ -27,8 +28,9 @@ public class TaskService {
 
     public void deleteTask(Long taskId) {
         throwIfIdIsNotValid(taskId);
-        taskRepository.deleteById(taskId);
+        taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
     }
+    
 
     private Task buildTask(TaskRequest taskRequest) {
         return Task.builder()
@@ -39,6 +41,11 @@ public class TaskService {
                 .completedAt(taskRequest.getCompletedAt())
                 .deadline(taskRequest.getDeadline())
                 .build();
+    }
+
+    private Task getTaskOrThrowIfNotExist(Long taskId) {
+        return taskRepository.findById(taskId).orElseThrow(
+                () -> new TaskNotFoundException(messageService.getMessage(ErrorMessages.TASK_NOT_FOUND)));
     }
 
     private void throwIfRequestIsNull(TaskRequest taskRequest) {

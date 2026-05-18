@@ -18,7 +18,7 @@ public class TaskService {
 
     public TaskResponse getTaskResponse(Long taskId) {
         throwIfIdIsNotValid(taskId);
-        return TaskResponse.fromEntity(taskRepository.findById(taskId).orElseThrow());
+        return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
     }
 
     public TaskResponse saveTask(TaskRequest taskRequest) {
@@ -30,8 +30,7 @@ public class TaskService {
         throwIfIdIsNotValid(taskId);
         taskRepository.deleteById(taskId);
     }
-
-
+    
 
     private Task buildTask(TaskRequest taskRequest) {
         return Task.builder()

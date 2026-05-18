@@ -7,6 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.TaskRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.entity.Task;
+import pl.disciplineapp.DisciplineApp.exception.TaskNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
 
 @Service
@@ -30,6 +31,8 @@ public class TaskService {
         taskRepository.deleteById(taskId);
     }
 
+
+
     private Task buildTask(TaskRequest taskRequest) {
         return Task.builder()
                 .taskName(taskRequest.getTaskName())
@@ -39,6 +42,11 @@ public class TaskService {
                 .completedAt(taskRequest.getCompletedAt())
                 .deadline(taskRequest.getDeadline())
                 .build();
+    }
+
+    private Task getTaskOrThrowIfNotExist(Long taskId) {
+        return taskRepository.findById(taskId).orElseThrow(
+                () -> new TaskNotFoundException(messageService.getMessage(ErrorMessages.TASK_NOT_FOUND)));
     }
 
     private void throwIfRequestIsNull(TaskRequest taskRequest) {

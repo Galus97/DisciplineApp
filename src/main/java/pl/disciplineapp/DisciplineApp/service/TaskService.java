@@ -30,7 +30,19 @@ public class TaskService {
         throwIfIdIsNotValid(taskId);
         taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
     }
-    
+
+    public TaskResponse updateTask(TaskRequest taskRequest) {
+        throwIfRequestIsNull(taskRequest);
+        Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId());
+        existingTask.setTaskName(taskRequest.getTaskName());
+        existingTask.setDescription(taskRequest.getDescription());
+        existingTask.setCompleted(taskRequest.isCompleted());
+        existingTask.setCreatedAt(taskRequest.getCreatedAt());
+        existingTask.setCompletedAt(taskRequest.getCompletedAt());
+        existingTask.setDeadline(taskRequest.getDeadline());
+
+        return TaskResponse.fromEntity(taskRepository.save(existingTask));
+    }
 
     private Task buildTask(TaskRequest taskRequest) {
         return Task.builder()

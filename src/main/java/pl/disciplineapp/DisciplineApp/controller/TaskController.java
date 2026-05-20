@@ -4,10 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.disciplineapp.DisciplineApp.dto.request.TaskRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.service.TaskService;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,5 +23,11 @@ public class TaskController {
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> showTask(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getTaskResponse(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest taskRequest) {
+        TaskResponse savedTask = taskService.saveTask(taskRequest);
+        return ResponseEntity.created(URI.create("/task/" + savedTask.taskId())).body(savedTask);
     }
 }

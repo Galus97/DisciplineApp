@@ -13,8 +13,6 @@ import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
 import pl.disciplineapp.DisciplineApp.exception.ValidationException;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -83,7 +81,7 @@ public class UserService {
 
     private void throwIfIdIsNotValid(Long userId) {
         if (userId == null || userId <= 0) {
-            throw new UserNotFoundException(messageService.getMessage(ErrorMessages.INVALID_USER_ID));
+            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.INVALID_USER_ID));
         }
     }
 }

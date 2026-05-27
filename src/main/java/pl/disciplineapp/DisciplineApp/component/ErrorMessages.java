@@ -13,4 +13,7 @@ public final class ErrorMessages {
     public static final String INVALID_TASK_ID = "error.invalidTaskId";
     public static final String TASK_REQUEST_IS_NULL = "error.taskRequestIsNull";
     public static final String TASK_NOT_FOUND = "error.taskNotFound";
+
+    //Savings
+    public static final String INVALID_SAVING_ID= "error.invalidSavingId";
 }

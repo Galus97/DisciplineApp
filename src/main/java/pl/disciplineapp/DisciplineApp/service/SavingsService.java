@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
-import pl.disciplineapp.DisciplineApp.repository.SavingsRepository;
+import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
 
 @Service
 @RequiredArgsConstructor
 public class SavingsService {
-    private final SavingsRepository savingsRepository;
+    private final SavingRepository savingRepository;
     private final MessageService messageService;
-
 
     private void throwIfIdIsNotValid(Long savingId) {
         if (savingId == null || savingId <= 0) {

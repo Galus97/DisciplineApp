@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +20,21 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "savings")
-public class Savings {
+public class Saving {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long savingsId;
+    private Long savingId;
 
+    @NotBlank
+    private String savingType;
 
+    @NotNull
+    private Float TotalValue;
+
+    @NotNull
+    private Float quantity;
+
+    @NotNull
+    private Float unitPrice;
 }

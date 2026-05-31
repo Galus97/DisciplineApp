@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
+import pl.disciplineapp.DisciplineApp.dto.request.SavingRequest;
+import pl.disciplineapp.DisciplineApp.dto.response.SavingResponse;
 import pl.disciplineapp.DisciplineApp.entity.Saving;
 import pl.disciplineapp.DisciplineApp.exception.SavingNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
@@ -13,6 +15,15 @@ import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
 public class SavingsService {
     private final SavingRepository savingRepository;
     private final MessageService messageService;
+
+    private Saving buildSaving(SavingRequest savingRequest) {
+        return Saving.builder()
+                .savingType(savingRequest.getSavingType())
+                .totalValue(savingRequest.getTotalValue())
+                .quantity(savingRequest.getQuantity())
+                .unitPrice(savingRequest.getUnitPrice())
+                .build();
+    }
 
     private Saving getSavingOrThrowIfNotExist(Long savingId) {
         return savingRepository.findById(savingId).orElseThrow(

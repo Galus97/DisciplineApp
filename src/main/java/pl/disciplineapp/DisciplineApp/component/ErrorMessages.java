@@ -16,4 +16,5 @@ public final class ErrorMessages {
 
     //Savings
     public static final String INVALID_SAVING_ID= "error.invalidSavingId";
+    public static final String SAVING_NOT_FOUND = "error.savingNotFound";
 }

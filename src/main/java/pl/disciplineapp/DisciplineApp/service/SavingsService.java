@@ -16,6 +16,11 @@ public class SavingsService {
     private final SavingRepository savingRepository;
     private final MessageService messageService;
 
+    public SavingResponse getSavingResponse (Long savingId) {
+        throwIfIdIsNotValid(savingId);
+        return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
+    }
+
     private Saving buildSaving(SavingRequest savingRequest) {
         return Saving.builder()
                 .savingType(savingRequest.getSavingType())

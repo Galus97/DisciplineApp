@@ -21,6 +21,11 @@ public class SavingsService {
         return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
     }
 
+    public SavingResponse saveSaving(SavingRequest savingRequest) {
+        throwIfRequestIsNull(savingRequest);
+        return SavingResponse.fromEntity(buildSaving(savingRequest));
+    }
+
     private Saving buildSaving(SavingRequest savingRequest) {
         return Saving.builder()
                 .savingType(savingRequest.getSavingType())

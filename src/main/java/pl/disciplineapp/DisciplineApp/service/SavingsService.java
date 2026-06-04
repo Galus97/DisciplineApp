@@ -16,6 +16,21 @@ public class SavingsService {
     private final SavingRepository savingRepository;
     private final MessageService messageService;
 
+    public SavingResponse getSavingResponse(Long savingId) {
+        throwIfIdIsNotValid(savingId);
+        return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
+    }
+
+    public SavingResponse saveSaving(SavingRequest savingRequest) {
+        throwIfRequestIsNull(savingRequest);
+        return SavingResponse.fromEntity(buildSaving(savingRequest));
+    }
+
+    public void deleteSaving(Long savingId) {
+        throwIfIdIsNotValid(savingId);
+        savingRepository.delete(getSavingOrThrowIfNotExist(savingId));
+    }
+
     private Saving buildSaving(SavingRequest savingRequest) {
         return Saving.builder()
                 .savingType(savingRequest.getSavingType())
@@ -23,6 +38,12 @@ public class SavingsService {
                 .quantity(savingRequest.getQuantity())
                 .unitPrice(savingRequest.getUnitPrice())
                 .build();
+    }
+
+    private void throwIfRequestIsNull(SavingRequest savingRequest) {
+        if (savingRequest == null) {
+           throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.SAVING_REQUEST_IS_NULL));
+        }
     }
 
     private Saving getSavingOrThrowIfNotExist(Long savingId) {

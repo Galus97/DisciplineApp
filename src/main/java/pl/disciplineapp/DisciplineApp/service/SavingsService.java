@@ -26,6 +26,11 @@ public class SavingsService {
         return SavingResponse.fromEntity(buildSaving(savingRequest));
     }
 
+    public void deleteSaving(Long savingId) {
+        throwIfIdIsNotValid(savingId);
+        savingRepository.delete(getSavingOrThrowIfNotExist(savingId));
+    }
+
     private Saving buildSaving(SavingRequest savingRequest) {
         return Saving.builder()
                 .savingType(savingRequest.getSavingType())

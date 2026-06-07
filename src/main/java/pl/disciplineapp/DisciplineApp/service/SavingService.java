@@ -6,14 +6,13 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.SavingRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.SavingResponse;
-import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.entity.Saving;
 import pl.disciplineapp.DisciplineApp.exception.SavingNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
 
 @Service
 @RequiredArgsConstructor
-public class SavingsService {
+public class SavingService {
     private final SavingRepository savingRepository;
     private final MessageService messageService;
 

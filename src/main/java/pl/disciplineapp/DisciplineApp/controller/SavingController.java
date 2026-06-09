@@ -21,8 +21,15 @@ public class SavingController {
     }
 
     @PostMapping
-    public ResponseEntity<SavingResponse> saveSaving(@RequestBody SavingRequest savingRequest) {
+    public ResponseEntity<SavingResponse> createSaving(@RequestBody SavingRequest savingRequest) {
         SavingResponse savedSaving = savingService.saveSaving(savingRequest);
         return ResponseEntity.created(URI.create("/saving/" + savedSaving.savingId())).body(savedSaving);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSaving(@PathVariable Long id) {
+        savingService.deleteSaving(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

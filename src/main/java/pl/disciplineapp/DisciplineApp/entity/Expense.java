@@ -1,0 +1,34 @@
+package pl.disciplineapp.DisciplineApp.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "expenses")
+public class Expense {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long expenseId;
+
+    @NotBlank
+    private String expenseType;
+
+    @NotNull
+    private Float totalValue;
+
+    @NotNull
+    private Float quantity;
+
+    @NotNull
+    private Float unitPrice;
+}

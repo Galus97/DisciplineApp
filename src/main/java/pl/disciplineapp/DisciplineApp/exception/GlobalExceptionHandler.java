@@ -12,6 +12,11 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ExpenseNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleExpenseNotFoundException(ExpenseNotFoundException e) {
+        return getMapResponseEntity(e);
+    }
+
     @ExceptionHandler(SavingNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleSavingNotFoundException(SavingNotFoundException e) {
         return getMapResponseEntity(e);

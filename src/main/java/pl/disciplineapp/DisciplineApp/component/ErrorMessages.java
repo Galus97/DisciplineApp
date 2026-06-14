@@ -18,4 +18,9 @@ public final class ErrorMessages {
     public static final String INVALID_SAVING_ID= "error.invalidSavingId";
     public static final String SAVING_NOT_FOUND = "error.savingNotFound";
     public static final String SAVING_REQUEST_IS_NULL = "error.savingRequestIsNull";
+
+    //Expense
+    public static final String INVALID_EXPENSE_ID= "error.invalidExpenseId";
+    public static final String EXPENSE_NOT_FOUND = "error.expenseNotFound";
+    public static final String EXPENSE_REQUEST_IS_NULL = "error.expenseRequestIsNull";
 }

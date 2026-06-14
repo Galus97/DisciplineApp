@@ -22,6 +22,11 @@ public class GlobalExceptionHandler {
         return getMapResponseEntity(e);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException e) {
+        return getMapResponseEntity(e);
+    }
+
     private static ResponseEntity<Map<String, String>> getMapResponseEntity(RuntimeException exception) {
         Map<String, String> response = new HashMap<>();
         response.put(ErrorMessages.ERROR,  exception.getMessage());

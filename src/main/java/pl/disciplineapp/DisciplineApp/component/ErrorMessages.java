@@ -21,4 +21,5 @@ public final class ErrorMessages {
 
     //Expense
     public static final String INVALID_EXPENSE_ID= "error.invalidExpenseId";
+    public static final String EXPENSE_NOT_FOUND = "error.expenseNotFound";
 }

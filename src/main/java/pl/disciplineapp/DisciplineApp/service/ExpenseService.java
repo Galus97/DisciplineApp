@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
+import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
+import pl.disciplineapp.DisciplineApp.entity.Expense;
+import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
 
 @Service
@@ -11,6 +14,16 @@ import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final MessageService messageService;
+
+    public ExpenseResponse getExpenseResponse(Long expenseId) {
+        throwIfIdIsNotValid(expenseId);
+
+    }
+
+    private Expense getExpenseOrThrowIfNotExist(Long expenseId) {
+        return expenseRepository.findById(expenseId).orElseThrow(
+                () -> new ExpenseNotFoundException(messageService.getMessage(ErrorMessages.EXPENSE_NOT_FOUND)));
+    }
 
     private void throwIfIdIsNotValid(Long id) {
         if(id == null || id <= 0) {

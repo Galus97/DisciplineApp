@@ -17,7 +17,7 @@ public class ExpenseService {
 
     public ExpenseResponse getExpenseResponse(Long expenseId) {
         throwIfIdIsNotValid(expenseId);
-
+        return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId));
     }
 
     private Expense getExpenseOrThrowIfNotExist(Long expenseId) {

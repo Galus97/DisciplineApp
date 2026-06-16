@@ -21,6 +21,10 @@ public class ExpenseService {
         return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId));
     }
 
+    public ExpenseResponse saveExpense(ExpenseRequest expenseRequest) {
+
+    }
+
     private Expense buildExpense(ExpenseRequest expenseRequest) {
         return Expense.builder()
                 .expenseType(expenseRequest.getExpenseType())
@@ -28,6 +32,12 @@ public class ExpenseService {
                 .quantity(expenseRequest.getQuantity())
                 .unitPrice(expenseRequest.getUnitPrice())
                 .build();
+    }
+
+    private void throwIfRequestIsNull(ExpenseRequest expenseRequest) {
+        if (expenseRequest == null) {
+            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.EXPENSE_REQUEST_IS_NULL));
+        }
     }
 
     private Expense getExpenseOrThrowIfNotExist(Long expenseId) {

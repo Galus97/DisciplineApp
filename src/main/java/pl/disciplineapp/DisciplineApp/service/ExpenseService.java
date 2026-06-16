@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
+import pl.disciplineapp.DisciplineApp.dto.request.ExpenseRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.entity.Expense;
 import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
@@ -18,6 +19,26 @@ public class ExpenseService {
     public ExpenseResponse getExpenseResponse(Long expenseId) {
         throwIfIdIsNotValid(expenseId);
         return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId));
+    }
+
+    public ExpenseResponse saveExpense(ExpenseRequest expenseRequest) {
+        throwIfRequestIsNull(expenseRequest);
+        return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
+    }
+
+    private Expense buildExpense(ExpenseRequest expenseRequest) {
+        return Expense.builder()
+                .expenseType(expenseRequest.getExpenseType())
+                .totalValue(expenseRequest.getTotalValue())
+                .quantity(expenseRequest.getQuantity())
+                .unitPrice(expenseRequest.getUnitPrice())
+                .build();
+    }
+
+    private void throwIfRequestIsNull(ExpenseRequest expenseRequest) {
+        if (expenseRequest == null) {
+            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.EXPENSE_REQUEST_IS_NULL));
+        }
     }
 
     private Expense getExpenseOrThrowIfNotExist(Long expenseId) {

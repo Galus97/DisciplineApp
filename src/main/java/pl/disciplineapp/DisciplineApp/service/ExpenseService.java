@@ -22,7 +22,8 @@ public class ExpenseService {
     }
 
     public ExpenseResponse saveExpense(ExpenseRequest expenseRequest) {
-
+        throwIfRequestIsNull(expenseRequest);
+        return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
     }
 
     private Expense buildExpense(ExpenseRequest expenseRequest) {

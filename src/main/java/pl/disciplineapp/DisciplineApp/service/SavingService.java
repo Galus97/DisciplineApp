@@ -23,7 +23,7 @@ public class SavingService {
 
     public SavingResponse saveSaving(SavingRequest savingRequest) {
         throwIfRequestIsNull(savingRequest);
-        return SavingResponse.fromEntity(buildSaving(savingRequest));
+        return SavingResponse.fromEntity(savingRepository.save(buildSaving(savingRequest)));
     }
 
     public void deleteSaving(Long savingId) {

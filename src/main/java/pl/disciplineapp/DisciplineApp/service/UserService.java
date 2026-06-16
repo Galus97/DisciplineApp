@@ -35,7 +35,7 @@ public class UserService {
         throwIfRequestIsNull(userRequest);
         User user = buildUser(userRequest);
         if(registerValidator.validateUser(user).isEmpty()){
-            return UserResponse.fromEntity(buildUser(userRequest));
+            return UserResponse.fromEntity(userRepository.save(buildUser(userRequest)));
         } else {
             throw new ValidationException(registerValidator.validateUser(user));
         }

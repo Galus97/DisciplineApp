@@ -31,6 +31,18 @@ public class ExpenseService {
         expenseRepository.delete(getExpenseOrThrowIfNotExist(id));
     }
 
+    public ExpenseResponse updateExpense(ExpenseRequest expenseRequest) {
+        throwIfRequestIsNull(expenseRequest);
+
+        Expense existingExpense = getExpenseOrThrowIfNotExist(expenseRequest.getExpenseId());
+        existingExpense.setExpenseType(existingExpense.getExpenseType());
+        existingExpense.setTotalValue(existingExpense.getTotalValue());
+        existingExpense.setQuantity(existingExpense.getQuantity());
+        existingExpense.setUnitPrice(existingExpense.getUnitPrice());
+
+        return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
+    }
+
     private Expense buildExpense(ExpenseRequest expenseRequest) {
         return Expense.builder()
                 .expenseType(expenseRequest.getExpenseType())

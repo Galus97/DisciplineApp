@@ -25,4 +25,15 @@ public class ExpenseController {
         ExpenseResponse savedExpense = expenseService.saveExpense(expenseRequest);
         return ResponseEntity.created(URI.create("/expense/" + savedExpense.expenseId())).body(savedExpense);
     }
+
+    @PutMapping
+    public ResponseEntity<ExpenseResponse> updateExpense(@RequestBody ExpenseRequest expenseRequest) {
+        return ResponseEntity.ok(expenseService.updateExpense(expenseRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id) {
+        expenseService.deleteExpense(id);
+        return ResponseEntity.noContent().build();
+    }
 }

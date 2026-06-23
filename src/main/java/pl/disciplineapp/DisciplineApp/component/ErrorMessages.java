@@ -27,5 +27,5 @@ public final class ErrorMessages {
     //Invest
     public static final String INVALID_INVESTMENT_ID= "error.invalidInvestmentId";
     public static final String INVESTMENT_NOT_FOUND = "error.investmentNotFound";
-    
+    public static final String INVESTMENT_REQUEST_IS_NULL = "error.investmentRequestIsNull";
 }

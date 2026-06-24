@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class InvestmentResponse {
+public class InvestmentRequest {
     private Long investmentId;
     private String investmentType;
     private Float totalValue;

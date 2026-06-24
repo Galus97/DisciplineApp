@@ -17,6 +17,11 @@ public class GlobalExceptionHandler {
         return getMapResponseEntity(e);
     }
 
+    @ExceptionHandler(InvestmentNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleInvestmentNotFoundException(InvestmentNotFoundException e) {
+        return getMapResponseEntity(e);
+    }
+
     @ExceptionHandler(ExpenseNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleExpenseNotFoundException(ExpenseNotFoundException e) {
         return getMapResponseEntity(e);

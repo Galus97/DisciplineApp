@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
-import pl.disciplineapp.DisciplineApp.dto.response.InvestmentRequest;
+import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
+import pl.disciplineapp.DisciplineApp.entity.Investment;
+import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 
 @Service
@@ -13,7 +15,26 @@ public class InvestmentService {
     private final InvestmentRepository investmentRepository;
     private final MessageService messageService;
 
-    private void throwIfRequestIsNull(InvestmentRequest investmentRequest) {
+    public InvestmentResponse getInvestment(Long id) {
+        throwIfIdIsNotValid(id);
+        return InvestmentResponse.fromEntity(getInvestmentOrThrowIfNotExist(id));
+    }
+
+    private Investment buildInvestment(InvestmentResponse investmentRequest) {
+        return Investment.builder()
+                .investmentType(investmentRequest.investmentType())
+                .totalValue(investmentRequest.totalValue())
+                .quantity(investmentRequest.quantity())
+                .unitPrice(investmentRequest.unitPrice())
+                .build();
+    }
+
+    private Investment getInvestmentOrThrowIfNotExist(Long id) {
+        return investmentRepository.findById(id).orElseThrow(
+                () -> new InvestmentNotFoundException(messageService.getMessage(ErrorMessages.INVESTMENT_NOT_FOUND)));
+    }
+
+    private void throwIfRequestIsNull(InvestmentResponse investmentRequest) {
         if (investmentRequest == null) {
            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.INVESTMENT_REQUEST_IS_NULL));
         }

@@ -16,6 +16,15 @@ public class InvestmentService {
     private final MessageService messageService;
 
 
+    private Investment buildInvestment(InvestmentRequest investmentRequest) {
+        return Investment.builder()
+                .investmentType(investmentRequest.investmentType())
+                .totalValue(investmentRequest.totalValue())
+                .quantity(investmentRequest.quantity())
+                .unitPrice(investmentRequest.unitPrice())
+                .build();
+    }
+
     private Investment getInvestmentOrThrowIfNotExist(Long id) {
         return investmentRepository.findById(id).orElseThrow(
                 () -> new InvestmentNotFoundException(messageService.getMessage(ErrorMessages.INVESTMENT_NOT_FOUND)));

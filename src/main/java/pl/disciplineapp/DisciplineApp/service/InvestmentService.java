@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.response.InvestmentRequest;
+import pl.disciplineapp.DisciplineApp.entity.Investment;
+import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 
 @Service
@@ -12,6 +14,12 @@ import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 public class InvestmentService {
     private final InvestmentRepository investmentRepository;
     private final MessageService messageService;
+
+
+    private Investment getInvestmentOrThrowIfNotExist(Long id) {
+        return investmentRepository.findById(id).orElseThrow(
+                () -> new InvestmentNotFoundException(messageService.getMessage(ErrorMessages.INVESTMENT_NOT_FOUND)));
+    }
 
     private void throwIfRequestIsNull(InvestmentRequest investmentRequest) {
         if (investmentRequest == null) {

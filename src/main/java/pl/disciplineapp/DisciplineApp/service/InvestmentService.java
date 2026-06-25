@@ -20,6 +20,11 @@ public class InvestmentService {
         return InvestmentResponse.fromEntity(getInvestmentOrThrowIfNotExist(id));
     }
 
+    public void deleteInvestment(Long id) {
+        throwIfIdIsNotValid(id);
+        investmentRepository.delete(getInvestmentOrThrowIfNotExist(id));
+    }
+
     private Investment buildInvestment(InvestmentResponse investmentRequest) {
         return Investment.builder()
                 .investmentType(investmentRequest.investmentType())

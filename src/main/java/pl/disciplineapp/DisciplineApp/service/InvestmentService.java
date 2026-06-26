@@ -10,6 +10,8 @@ import pl.disciplineapp.DisciplineApp.entity.Investment;
 import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class InvestmentService {
@@ -24,6 +26,18 @@ public class InvestmentService {
     public InvestmentResponse saveInvestment(InvestmentRequest investmentRequest) {
         throwIfRequestIsNull(investmentRequest);
         return InvestmentResponse.fromEntity(investmentRepository.save(buildInvestment(investmentRequest)));
+    }
+
+    public InvestmentResponse updateInvestment(InvestmentRequest investmentRequest) {
+        throwIfRequestIsNull(investmentRequest);
+
+        Investment existingInvestment = getInvestmentOrThrowIfNotExist(investmentRequest.getInvestmentId());
+        existingInvestment.setInvestmentType(investmentRequest.getInvestmentType());
+        existingInvestment.setTotalValue(investmentRequest.getTotalValue());
+        existingInvestment.setQuantity(investmentRequest.getQuantity());
+        existingInvestment.setUnitPrice(investmentRequest.getUnitPrice());
+
+        return InvestmentResponse.fromEntity(investmentRepository.save(existingInvestment));
     }
 
     public void deleteInvestment(Long id) {

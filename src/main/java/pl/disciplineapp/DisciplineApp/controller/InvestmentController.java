@@ -31,4 +31,10 @@ public class InvestmentController {
     public ResponseEntity<InvestmentResponse> updateInvestment(@RequestBody InvestmentRequest investmentRequest) {
         return ResponseEntity.ok(investmentService.updateInvestment(investmentRequest));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInvestment(@PathVariable Long id) {
+        investmentService.deleteInvestment(id);
+        return ResponseEntity.noContent().build();
+    }
 }

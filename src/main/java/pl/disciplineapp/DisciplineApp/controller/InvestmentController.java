@@ -26,4 +26,9 @@ public class InvestmentController {
         return ResponseEntity.created(URI.create("/investment/" + savedInvestment.investmentId()))
                 .body(savedInvestment);
     }
+
+    @PutMapping
+    public ResponseEntity<InvestmentResponse> updateInvestment(@RequestBody InvestmentRequest investmentRequest) {
+        return ResponseEntity.ok(investmentService.updateInvestment(investmentRequest));
+    }
 }

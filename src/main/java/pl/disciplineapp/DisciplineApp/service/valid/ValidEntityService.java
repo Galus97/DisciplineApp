@@ -15,12 +15,13 @@ public class ValidEntityService implements ValidEntity {
         if (id == null || id < 1) {
             throw new IllegalArgumentException(messageService.getMessage(errorMessage));
         }
-
     }
 
     @Override
-    public void throwIfRequestIsNull(Object request) {
-
+    public void throwIfRequestIsNull(Object request, String errorMessage) {
+        if (request == null) {
+            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.TASK_REQUEST_IS_NULL));
+        }
     }
 
     @Override

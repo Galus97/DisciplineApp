@@ -15,6 +15,7 @@ public class ValidEntityService implements ValidEntity {
         if (id == null || id < 1) {
             throw new IllegalArgumentException(messageService.getMessage(errorMessage));
         }
+
     }
 
     @Override

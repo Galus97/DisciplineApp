@@ -22,7 +22,7 @@ public class TaskService {
     }
 
     public TaskResponse saveTask(TaskRequest taskRequest) {
-        throwIfRequestIsNull(taskRequest);
+       // throwIfRequestIsNull(taskRequest);
         return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
     }
 
@@ -32,7 +32,7 @@ public class TaskService {
     }
 
     public TaskResponse updateTask(TaskRequest taskRequest) {
-        throwIfRequestIsNull(taskRequest);
+       // throwIfRequestIsNull(taskRequest);
         Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId());
         existingTask.setTaskName(taskRequest.getTaskName());
         existingTask.setDescription(taskRequest.getDescription());
@@ -60,9 +60,4 @@ public class TaskService {
                 () -> new TaskNotFoundException(messageService.getMessage(ErrorMessages.TASK_NOT_FOUND)));
     }
 
-    private void throwIfRequestIsNull(TaskRequest taskRequest) {
-        if (taskRequest == null) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.TASK_REQUEST_IS_NULL));
-        }
-    }
 }

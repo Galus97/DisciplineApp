@@ -9,6 +9,7 @@ import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.entity.Task;
 import pl.disciplineapp.DisciplineApp.exception.TaskNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
+import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,6 @@ public class TaskService {
     private final MessageService messageService;
 
     public TaskResponse getTaskResponse(Long taskId) {
-        throwIfIdIsNotValid(taskId);
         return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
     }
 
@@ -27,7 +27,7 @@ public class TaskService {
     }
 
     public void deleteTask(Long taskId) {
-        throwIfIdIsNotValid(taskId);
+        //throwIfIdIsNotValid(taskId);
         taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
     }
 
@@ -63,13 +63,6 @@ public class TaskService {
     private void throwIfRequestIsNull(TaskRequest taskRequest) {
         if (taskRequest == null) {
             throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.TASK_REQUEST_IS_NULL));
-        }
-    }
-
-
-    private void throwIfIdIsNotValid(Long taskId) {
-        if (taskId == null || taskId < 1) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.INVALID_TASK_ID));
         }
     }
 }

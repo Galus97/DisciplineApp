@@ -23,9 +23,4 @@ public class ValidEntityService implements ValidEntity {
             throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.TASK_REQUEST_IS_NULL));
         }
     }
-
-    @Override
-    public Object getEntityOrThrowIfNotExist(Long id) {
-        return null;
-    }
 }

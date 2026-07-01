@@ -15,9 +15,11 @@ import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
     public TaskResponse getTaskResponse(Long taskId) {
+        serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
         return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
     }
 

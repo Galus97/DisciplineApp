@@ -24,7 +24,7 @@ public class TaskService {
     }
 
     public TaskResponse saveTask(TaskRequest taskRequest) {
-       // throwIfRequestIsNull(taskRequest);
+        serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
         return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
     }
 

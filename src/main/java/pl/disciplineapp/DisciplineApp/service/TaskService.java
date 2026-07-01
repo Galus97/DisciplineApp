@@ -34,7 +34,7 @@ public class TaskService {
     }
 
     public TaskResponse updateTask(TaskRequest taskRequest) {
-       // throwIfRequestIsNull(taskRequest);
+        serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
         Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId());
         existingTask.setTaskName(taskRequest.getTaskName());
         existingTask.setDescription(taskRequest.getDescription());

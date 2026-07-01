@@ -29,7 +29,7 @@ public class TaskService {
     }
 
     public void deleteTask(Long taskId) {
-        //throwIfIdIsNotValid(taskId);
+        serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
         taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
     }
 

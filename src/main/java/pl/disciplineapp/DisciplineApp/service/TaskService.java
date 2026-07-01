@@ -15,24 +15,26 @@ import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
     public TaskResponse getTaskResponse(Long taskId) {
+        serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
         return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
     }
 
     public TaskResponse saveTask(TaskRequest taskRequest) {
-       // throwIfRequestIsNull(taskRequest);
+        serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
         return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
     }
 
     public void deleteTask(Long taskId) {
-        //throwIfIdIsNotValid(taskId);
+        serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
         taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
     }
 
     public TaskResponse updateTask(TaskRequest taskRequest) {
-       // throwIfRequestIsNull(taskRequest);
+        serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
         Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId());
         existingTask.setTaskName(taskRequest.getTaskName());
         existingTask.setDescription(taskRequest.getDescription());

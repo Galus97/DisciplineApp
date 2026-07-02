@@ -9,15 +9,17 @@ import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.entity.Expense;
 import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
+import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
 @Service
 @RequiredArgsConstructor
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
+    private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
     public ExpenseResponse getExpenseResponse(Long expenseId) {
-        throwIfIdIsNotValid(expenseId);
+        serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
         return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId));
     }
 

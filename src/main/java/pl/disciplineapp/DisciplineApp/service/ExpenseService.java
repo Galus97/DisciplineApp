@@ -58,10 +58,4 @@ public class ExpenseService {
         return expenseRepository.findById(expenseId).orElseThrow(
                 () -> new ExpenseNotFoundException(messageService.getMessage(ErrorMessages.EXPENSE_NOT_FOUND)));
     }
-
-    private void throwIfIdIsNotValid(Long id) {
-        if(id == null || id <= 0) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.INVALID_EXPENSE_ID));
-        }
-    }
 }

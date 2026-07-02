@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -9,30 +10,34 @@ import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.entity.Expense;
 import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
+import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
 @Service
 @RequiredArgsConstructor
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
+    private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
     public ExpenseResponse getExpenseResponse(Long expenseId) {
-        throwIfIdIsNotValid(expenseId);
+        serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
         return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId));
     }
 
+    @Transactional
     public ExpenseResponse saveExpense(ExpenseRequest expenseRequest) {
-        throwIfRequestIsNull(expenseRequest);
+        serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
         return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
     }
 
-    public void deleteExpense(Long id) {
-        throwIfIdIsNotValid(id);
-        expenseRepository.delete(getExpenseOrThrowIfNotExist(id));
+    public void deleteExpense(Long expenseId) {
+        serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
+        expenseRepository.delete(getExpenseOrThrowIfNotExist(expenseId));
     }
 
+    @Transactional
     public ExpenseResponse updateExpense(ExpenseRequest expenseRequest) {
-        throwIfRequestIsNull(expenseRequest);
+        serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
 
         Expense existingExpense = getExpenseOrThrowIfNotExist(expenseRequest.getExpenseId());
         existingExpense.setExpenseType(existingExpense.getExpenseType());
@@ -52,20 +57,8 @@ public class ExpenseService {
                 .build();
     }
 
-    private void throwIfRequestIsNull(ExpenseRequest expenseRequest) {
-        if (expenseRequest == null) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.EXPENSE_REQUEST_IS_NULL));
-        }
-    }
-
     private Expense getExpenseOrThrowIfNotExist(Long expenseId) {
         return expenseRepository.findById(expenseId).orElseThrow(
                 () -> new ExpenseNotFoundException(messageService.getMessage(ErrorMessages.EXPENSE_NOT_FOUND)));
-    }
-
-    private void throwIfIdIsNotValid(Long id) {
-        if(id == null || id <= 0) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.INVALID_EXPENSE_ID));
-        }
     }
 }

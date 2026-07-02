@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -23,6 +24,7 @@ public class TaskService {
         return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
     }
 
+    @Transactional
     public TaskResponse saveTask(TaskRequest taskRequest) {
         serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
         return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
@@ -33,6 +35,7 @@ public class TaskService {
         taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
     }
 
+    @Transactional
     public TaskResponse updateTask(TaskRequest taskRequest) {
         serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
         Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId());

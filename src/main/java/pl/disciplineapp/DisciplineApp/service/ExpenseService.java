@@ -28,9 +28,9 @@ public class ExpenseService {
         return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
     }
 
-    public void deleteExpense(Long id) {
-        throwIfIdIsNotValid(id);
-        expenseRepository.delete(getExpenseOrThrowIfNotExist(id));
+    public void deleteExpense(Long expenseId) {
+        serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
+        expenseRepository.delete(getExpenseOrThrowIfNotExist(expenseId));
     }
 
     public ExpenseResponse updateExpense(ExpenseRequest expenseRequest) {

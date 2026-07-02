@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -23,6 +24,7 @@ public class ExpenseService {
         return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId));
     }
 
+    @Transactional
     public ExpenseResponse saveExpense(ExpenseRequest expenseRequest) {
         serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
         return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
@@ -33,6 +35,7 @@ public class ExpenseService {
         expenseRepository.delete(getExpenseOrThrowIfNotExist(expenseId));
     }
 
+    @Transactional
     public ExpenseResponse updateExpense(ExpenseRequest expenseRequest) {
         serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
 

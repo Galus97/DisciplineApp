@@ -54,12 +54,6 @@ public class ExpenseService {
                 .build();
     }
 
-    private void throwIfRequestIsNull(ExpenseRequest expenseRequest) {
-        if (expenseRequest == null) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.EXPENSE_REQUEST_IS_NULL));
-        }
-    }
-
     private Expense getExpenseOrThrowIfNotExist(Long expenseId) {
         return expenseRepository.findById(expenseId).orElseThrow(
                 () -> new ExpenseNotFoundException(messageService.getMessage(ErrorMessages.EXPENSE_NOT_FOUND)));

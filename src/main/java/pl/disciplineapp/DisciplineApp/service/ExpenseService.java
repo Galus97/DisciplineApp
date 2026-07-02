@@ -25,6 +25,7 @@ public class ExpenseService {
 
     public ExpenseResponse saveExpense(ExpenseRequest expenseRequest) {
         throwIfRequestIsNull(expenseRequest);
+        serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
         return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
     }
 

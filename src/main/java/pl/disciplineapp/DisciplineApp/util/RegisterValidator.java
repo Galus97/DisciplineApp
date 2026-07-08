@@ -17,7 +17,7 @@ public class RegisterValidator {
     private final UserRepository userRepository;
     private final MessageService messageService;
 
-    public List<String> validateErrors(User user) {
+    public List<String> validateUser(User user) {
         List<String> errors = new ArrayList<>();
 
         Optional<User> ifUserExistByEmail = userRepository.findByEmail(user.getEmail());

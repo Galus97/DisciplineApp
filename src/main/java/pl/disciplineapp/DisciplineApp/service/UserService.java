@@ -5,13 +5,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
-import pl.disciplineapp.DisciplineApp.component.RegisterValidator;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.entity.User;
 import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
 import pl.disciplineapp.DisciplineApp.exception.ValidationException;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
+import pl.disciplineapp.DisciplineApp.util.RegisterValidator;
 
 @Service
 @RequiredArgsConstructor

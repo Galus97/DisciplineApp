@@ -1,7 +1,9 @@
-package pl.disciplineapp.DisciplineApp.component;
+package pl.disciplineapp.DisciplineApp.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
+import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.entity.User;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 
@@ -18,9 +20,11 @@ public class RegisterValidator {
     public List<String> validateUser(User user) {
         List<String> errors = new ArrayList<>();
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        Optional<User> ifUserExistByEmail = userRepository.findByEmail(user.getEmail());
+        if (ifUserExistByEmail.isEmpty()) {
             errors.add(messageService.getMessage(ErrorMessages.EMAIL_IS_ALREADY_USED));
         }
+
         return errors;
     }
 }

@@ -31,4 +31,7 @@ public class Expense {
 
     @NotNull
     private Float unitPrice;
+
+    @ManyToOne
+    private User user;
 }

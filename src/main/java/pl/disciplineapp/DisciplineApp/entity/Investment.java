@@ -32,4 +32,6 @@ public class Investment {
     @NotNull
     private Float unitPrice;
 
+    @ManyToOne
+    private User user;
 }

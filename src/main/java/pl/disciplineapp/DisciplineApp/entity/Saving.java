@@ -32,5 +32,6 @@ public class Saving {
     private Float unitPrice;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

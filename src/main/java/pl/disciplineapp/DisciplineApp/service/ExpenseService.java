@@ -40,6 +40,7 @@ public class ExpenseService {
     @Transactional
     public ExpenseResponse updateExpense(ExpenseRequest expenseRequest) {
         serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
+        serviceValidator.throwIfIdIsNotValid(expenseRequest.getExpenseId(), ErrorMessages.INVALID_EXPENSE_ID);
 
         Expense existingExpense = getExpenseOrThrowIfNotExist(expenseRequest.getExpenseId());
         existingExpense.setExpenseType(expenseRequest.getExpenseType());
@@ -52,7 +53,7 @@ public class ExpenseService {
     }
 
     public List<ExpenseResponse> getAllExpenseResponseByUser(Long userId) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_EXPENSE_ID);
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return ExpenseResponse.fromEntityList(expenseRepository.findAllByUser_UserId(userId));
     }
 

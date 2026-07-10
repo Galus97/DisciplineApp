@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.InvestmentRequest;
+import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
 import pl.disciplineapp.DisciplineApp.entity.Investment;
 import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +48,11 @@ public class InvestmentService {
     public void deleteInvestment(Long investmentId) {
         serviceValidator.throwIfIdIsNotValid(investmentId, ErrorMessages.INVALID_INVESTMENT_ID);
         investmentRepository.delete(getInvestmentOrThrowIfNotExist(investmentId));
+    }
+
+    public List<InvestmentResponse> getAllInvestmentResponseByUser(Long userId) {
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+        return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser_UserId(userId));
     }
 
     private Investment buildInvestment(InvestmentRequest investmentRequest) {

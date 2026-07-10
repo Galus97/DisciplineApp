@@ -12,6 +12,8 @@ import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ExpenseService {
@@ -40,12 +42,18 @@ public class ExpenseService {
         serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
 
         Expense existingExpense = getExpenseOrThrowIfNotExist(expenseRequest.getExpenseId());
-        existingExpense.setExpenseType(existingExpense.getExpenseType());
-        existingExpense.setTotalValue(existingExpense.getTotalValue());
-        existingExpense.setQuantity(existingExpense.getQuantity());
-        existingExpense.setUnitPrice(existingExpense.getUnitPrice());
+        existingExpense.setExpenseType(expenseRequest.getExpenseType());
+        existingExpense.setTotalValue(expenseRequest.getTotalValue());
+        existingExpense.setQuantity(expenseRequest.getQuantity());
+        existingExpense.setUnitPrice(expenseRequest.getUnitPrice());
+        existingExpense.setUser(expenseRequest.getUser());
 
         return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
+    }
+
+    public List<ExpenseResponse> getAllExpenseResponseByUser(Long userId) {
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_EXPENSE_ID);
+        return ExpenseResponse.fromEntityList(expenseRepository.findAllByUser_UserId(userId));
     }
 
     private Expense buildExpense(ExpenseRequest expenseRequest) {
@@ -54,6 +62,7 @@ public class ExpenseService {
                 .totalValue(expenseRequest.getTotalValue())
                 .quantity(expenseRequest.getQuantity())
                 .unitPrice(expenseRequest.getUnitPrice())
+                .user(expenseRequest.getUser())
                 .build();
     }
 

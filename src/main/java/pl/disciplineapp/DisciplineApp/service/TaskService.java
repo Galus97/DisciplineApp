@@ -12,6 +12,8 @@ import pl.disciplineapp.DisciplineApp.exception.TaskNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -47,6 +49,11 @@ public class TaskService {
         existingTask.setDeadline(taskRequest.getDeadline());
 
         return TaskResponse.fromEntity(taskRepository.save(existingTask));
+    }
+
+    public List<TaskResponse> getAllTaskResponseByUser(Long userId) {
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+        return TaskResponse.fromEntityList(taskRepository.findAllByUser_UserId(userId));
     }
 
     private Task buildTask(TaskRequest taskRequest) {

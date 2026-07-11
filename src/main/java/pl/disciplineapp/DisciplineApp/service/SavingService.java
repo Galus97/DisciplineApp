@@ -63,20 +63,8 @@ public class SavingService {
                 .build();
     }
 
-    private void throwIfRequestIsNull(SavingRequest savingRequest) {
-        if (savingRequest == null) {
-           throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.SAVING_REQUEST_IS_NULL));
-        }
-    }
-
     private Saving getSavingOrThrowIfNotExist(Long savingId) {
         return savingRepository.findById(savingId).orElseThrow(
                 () -> new SavingNotFoundException(messageService.getMessage(ErrorMessages.SAVING_NOT_FOUND)));
-    }
-
-    private void throwIfIdIsNotValid(Long savingId) {
-        if (savingId == null || savingId <= 0) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.INVALID_SAVING_ID));
-        }
     }
 }

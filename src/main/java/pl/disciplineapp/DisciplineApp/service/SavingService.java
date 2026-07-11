@@ -11,6 +11,8 @@ import pl.disciplineapp.DisciplineApp.exception.SavingNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SavingService {
@@ -44,6 +46,11 @@ public class SavingService {
         existingSaving.setUnitPrice(savingRequest.getUnitPrice());
 
         return SavingResponse.fromEntity(savingRepository.save(existingSaving));
+    }
+
+    public List<SavingResponse> getAllSavingResponseByUser(Long userId) {
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+        return SavingResponse.fromEntityList(savingRepository.findAllByUser_UserId(userId));
     }
 
     private Saving buildSaving(SavingRequest savingRequest) {

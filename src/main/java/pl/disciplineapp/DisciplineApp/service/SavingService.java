@@ -9,30 +9,33 @@ import pl.disciplineapp.DisciplineApp.dto.response.SavingResponse;
 import pl.disciplineapp.DisciplineApp.entity.Saving;
 import pl.disciplineapp.DisciplineApp.exception.SavingNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
+import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
 @Service
 @RequiredArgsConstructor
 public class SavingService {
     private final SavingRepository savingRepository;
     private final MessageService messageService;
+    private final ServiceValidator serviceValidator;
 
     public SavingResponse getSavingResponse(Long savingId) {
-        throwIfIdIsNotValid(savingId);
+        serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
         return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
     }
 
     public SavingResponse saveSaving(SavingRequest savingRequest) {
-        throwIfRequestIsNull(savingRequest);
+        serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
         return SavingResponse.fromEntity(savingRepository.save(buildSaving(savingRequest)));
     }
 
     public void deleteSaving(Long savingId) {
-        throwIfIdIsNotValid(savingId);
+        serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
         savingRepository.delete(getSavingOrThrowIfNotExist(savingId));
     }
 
     public SavingResponse updateSaving(SavingRequest savingRequest) {
-        throwIfRequestIsNull(savingRequest);
+        serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
+        serviceValidator.throwIfIdIsNotValid(savingRequest.getSavingId(), ErrorMessages.INVALID_SAVING_ID);
 
         Saving existingSaving = getSavingOrThrowIfNotExist(savingRequest.getSavingId());
         existingSaving.setSavingType(savingRequest.getSavingType());
@@ -49,6 +52,7 @@ public class SavingService {
                 .totalValue(savingRequest.getTotalValue())
                 .quantity(savingRequest.getQuantity())
                 .unitPrice(savingRequest.getUnitPrice())
+                .user(savingRequest.getUser())
                 .build();
     }
 

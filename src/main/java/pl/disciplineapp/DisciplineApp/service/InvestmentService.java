@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InvestmentService {
     private final InvestmentRepository investmentRepository;
+    private final UserService userService;
     private final MessageService messageService;
     private final ServiceValidator serviceValidator;
 
@@ -42,7 +43,7 @@ public class InvestmentService {
         existingInvestment.setTotalValue(investmentRequest.getTotalValue());
         existingInvestment.setQuantity(investmentRequest.getQuantity());
         existingInvestment.setUnitPrice(investmentRequest.getUnitPrice());
-        existingInvestment.setUser(investmentRequest.getUser());
+        existingInvestment.setUser(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()));
 
         return InvestmentResponse.fromEntity(investmentRepository.save(existingInvestment));
     }
@@ -64,7 +65,7 @@ public class InvestmentService {
                 .totalValue(investmentRequest.getTotalValue())
                 .quantity(investmentRequest.getQuantity())
                 .unitPrice(investmentRequest.getUnitPrice())
-                .user(investmentRequest.getUser())
+                .user(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()))
                 .build();
     }
 

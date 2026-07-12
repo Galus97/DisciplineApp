@@ -1,7 +1,6 @@
 package pl.disciplineapp.DisciplineApp.dto.response;
 
 import pl.disciplineapp.DisciplineApp.entity.Task;
-import pl.disciplineapp.DisciplineApp.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

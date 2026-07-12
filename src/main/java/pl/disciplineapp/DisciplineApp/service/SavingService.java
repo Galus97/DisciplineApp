@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SavingService {
     private final SavingRepository savingRepository;
+    private final UserService userService;
     private final MessageService messageService;
     private final ServiceValidator serviceValidator;
 
@@ -48,6 +49,7 @@ public class SavingService {
         existingSaving.setTotalValue(savingRequest.getTotalValue());
         existingSaving.setQuantity(savingRequest.getQuantity());
         existingSaving.setUnitPrice(savingRequest.getUnitPrice());
+        existingSaving.setUser(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()));
 
         return SavingResponse.fromEntity(savingRepository.save(existingSaving));
     }
@@ -63,7 +65,7 @@ public class SavingService {
                 .totalValue(savingRequest.getTotalValue())
                 .quantity(savingRequest.getQuantity())
                 .unitPrice(savingRequest.getUnitPrice())
-                .user(savingRequest.getUser())
+                .user(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()))
                 .build();
     }
 

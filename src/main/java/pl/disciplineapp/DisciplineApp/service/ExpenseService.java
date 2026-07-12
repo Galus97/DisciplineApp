@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
+    private final UserService userService;
     private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
@@ -48,7 +49,7 @@ public class ExpenseService {
         existingExpense.setTotalValue(expenseRequest.getTotalValue());
         existingExpense.setQuantity(expenseRequest.getQuantity());
         existingExpense.setUnitPrice(expenseRequest.getUnitPrice());
-        existingExpense.setUser(expenseRequest.getUser());
+        existingExpense.setUser(userService.getUserOrThrowIfNotExist(expenseRequest.getUserId()));
 
         return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
     }
@@ -64,7 +65,7 @@ public class ExpenseService {
                 .totalValue(expenseRequest.getTotalValue())
                 .quantity(expenseRequest.getQuantity())
                 .unitPrice(expenseRequest.getUnitPrice())
-                .user(expenseRequest.getUser())
+                .user(userService.getUserOrThrowIfNotExist(expenseRequest.getUserId()))
                 .build();
     }
 

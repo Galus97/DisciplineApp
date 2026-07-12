@@ -1,7 +1,6 @@
 package pl.disciplineapp.DisciplineApp.dto.response;
 
 import pl.disciplineapp.DisciplineApp.entity.Investment;
-import pl.disciplineapp.DisciplineApp.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;

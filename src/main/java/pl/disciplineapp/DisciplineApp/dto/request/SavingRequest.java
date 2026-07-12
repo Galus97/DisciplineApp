@@ -2,7 +2,6 @@ package pl.disciplineapp.DisciplineApp.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import pl.disciplineapp.DisciplineApp.entity.User;
 
 @Getter
 @Builder

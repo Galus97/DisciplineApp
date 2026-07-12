@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final UserService userService;
     private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
@@ -48,6 +49,7 @@ public class TaskService {
         existingTask.setCreatedAt(taskRequest.getCreatedAt());
         existingTask.setCompletedAt(taskRequest.getCompletedAt());
         existingTask.setDeadline(taskRequest.getDeadline());
+        existingTask.setUser(userService.getUserOrThrowIfNotExist(taskRequest.getUserId()));
 
         return TaskResponse.fromEntity(taskRepository.save(existingTask));
     }
@@ -65,6 +67,7 @@ public class TaskService {
                 .createdAt(taskRequest.getCreatedAt())
                 .completedAt(taskRequest.getCompletedAt())
                 .deadline(taskRequest.getDeadline())
+                .user(userService.getUserOrThrowIfNotExist(taskRequest.getUserId()))
                 .build();
     }
 

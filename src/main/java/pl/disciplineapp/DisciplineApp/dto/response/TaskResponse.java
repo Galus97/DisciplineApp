@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record TaskResponse(Long taskId, String taskName, String description, boolean completed, LocalDateTime createdAt,
-                           LocalDateTime completedAt, LocalDateTime deadline, User user) {
+                           LocalDateTime completedAt, LocalDateTime deadline, Long userId) {
 
     public static TaskResponse fromEntity(Task task) {
         return new TaskResponse(
@@ -19,7 +19,7 @@ public record TaskResponse(Long taskId, String taskName, String description, boo
                 task.getCreatedAt(),
                 task.getCompletedAt(),
                 task.getDeadline(),
-                task.getUser()
+                task.getUser() != null ? task.getUser().getUserId() : null
         );
     }
 

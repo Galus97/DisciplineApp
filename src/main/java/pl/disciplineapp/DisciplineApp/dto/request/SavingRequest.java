@@ -12,5 +12,5 @@ public class SavingRequest {
     private Float TotalValue;
     private Float quantity;
     private Float unitPrice;
-    private User user;
+    private Long userId;
 }

@@ -16,5 +16,5 @@ public class TaskRequest {
     private LocalDateTime createdAt;
     private LocalDateTime completedAt;
     private LocalDateTime deadline;
-    private User user;
+    private Long userId;
 }

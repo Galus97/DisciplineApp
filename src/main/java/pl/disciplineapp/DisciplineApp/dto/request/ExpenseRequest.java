@@ -12,5 +12,5 @@ public class ExpenseRequest {
     private Float totalValue;
     private Float quantity;
     private Float unitPrice;
-    private User user;
+    private Long userId;
 }

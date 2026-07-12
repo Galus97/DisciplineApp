@@ -12,5 +12,5 @@ public class InvestmentRequest {
     private Float totalValue;
     private Float quantity;
     private Float unitPrice;
-    private User user;
+    private Long userId;
 }

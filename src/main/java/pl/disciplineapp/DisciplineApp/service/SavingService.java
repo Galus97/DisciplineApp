@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -25,16 +26,19 @@ public class SavingService {
         return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
     }
 
+    @Transactional
     public SavingResponse saveSaving(SavingRequest savingRequest) {
         serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
         return SavingResponse.fromEntity(savingRepository.save(buildSaving(savingRequest)));
     }
 
+    @Transactional
     public void deleteSaving(Long savingId) {
         serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
         savingRepository.delete(getSavingOrThrowIfNotExist(savingId));
     }
 
+    @Transactional
     public SavingResponse updateSaving(SavingRequest savingRequest) {
         serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
         serviceValidator.throwIfIdIsNotValid(savingRequest.getSavingId(), ErrorMessages.INVALID_SAVING_ID);

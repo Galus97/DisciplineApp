@@ -1,11 +1,11 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.InvestmentRequest;
-import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
 import pl.disciplineapp.DisciplineApp.entity.Investment;
 import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InvestmentService {
     private final InvestmentRepository investmentRepository;
+    private final UserService userService;
     private final MessageService messageService;
     private final ServiceValidator serviceValidator;
 
@@ -26,11 +27,13 @@ public class InvestmentService {
         return InvestmentResponse.fromEntity(getInvestmentOrThrowIfNotExist(investmentId));
     }
 
+    @Transactional
     public InvestmentResponse saveInvestment(InvestmentRequest investmentRequest) {
         serviceValidator.throwIfRequestIsNull(investmentRequest, ErrorMessages.INVESTMENT_REQUEST_IS_NULL);
         return InvestmentResponse.fromEntity(investmentRepository.save(buildInvestment(investmentRequest)));
     }
 
+    @Transactional
     public InvestmentResponse updateInvestment(InvestmentRequest investmentRequest) {
         serviceValidator.throwIfRequestIsNull(investmentRequest, ErrorMessages.INVESTMENT_REQUEST_IS_NULL);
         serviceValidator.throwIfIdIsNotValid(investmentRequest.getInvestmentId(), ErrorMessages.INVALID_INVESTMENT_ID);
@@ -40,11 +43,12 @@ public class InvestmentService {
         existingInvestment.setTotalValue(investmentRequest.getTotalValue());
         existingInvestment.setQuantity(investmentRequest.getQuantity());
         existingInvestment.setUnitPrice(investmentRequest.getUnitPrice());
-        existingInvestment.setUser(investmentRequest.getUser());
+        existingInvestment.setUser(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()));
 
         return InvestmentResponse.fromEntity(investmentRepository.save(existingInvestment));
     }
 
+    @Transactional
     public void deleteInvestment(Long investmentId) {
         serviceValidator.throwIfIdIsNotValid(investmentId, ErrorMessages.INVALID_INVESTMENT_ID);
         investmentRepository.delete(getInvestmentOrThrowIfNotExist(investmentId));
@@ -61,7 +65,7 @@ public class InvestmentService {
                 .totalValue(investmentRequest.getTotalValue())
                 .quantity(investmentRequest.getQuantity())
                 .unitPrice(investmentRequest.getUnitPrice())
-                .user(investmentRequest.getUser())
+                .user(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()))
                 .build();
     }
 

@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.controller;
+package pl.disciplineapp.DisciplineApp.controller.crud;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

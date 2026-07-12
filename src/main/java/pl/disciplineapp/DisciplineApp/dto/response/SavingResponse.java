@@ -1,13 +1,12 @@
 package pl.disciplineapp.DisciplineApp.dto.response;
 
 import pl.disciplineapp.DisciplineApp.entity.Saving;
-import pl.disciplineapp.DisciplineApp.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public record SavingResponse(Long savingId, String savingType, Float TotalValue,
-                             Float quantity, Float unitPrice, User user) {
+                             Float quantity, Float unitPrice, Long userId) {
     public static SavingResponse fromEntity(Saving saving) {
         return new SavingResponse(
                 saving.getSavingId(),
@@ -15,7 +14,7 @@ public record SavingResponse(Long savingId, String savingType, Float TotalValue,
                 saving.getTotalValue(),
                 saving.getQuantity(),
                 saving.getUnitPrice(),
-                saving.getUser()
+                saving.getUser() != null ? saving.getUser().getUserId() : null
         );
     }
 

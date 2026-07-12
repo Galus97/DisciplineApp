@@ -74,21 +74,9 @@ public class UserService {
                 .build();
     }
 
-    private void throwIfRequestIsNull(UserRequest userRequest) {
-        if (userRequest == null) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.USER_REQUEST_IS_NULL));
-        }
-    }
-
     //Using this method in others Services
     public User getUserOrThrowIfNotExist(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(messageService.getMessage(ErrorMessages.USER_NOT_FOUND)));
-    }
-
-    private void throwIfIdIsNotValid(Long userId) {
-        if (userId == null || userId <= 0) {
-            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.INVALID_USER_ID));
-        }
     }
 }

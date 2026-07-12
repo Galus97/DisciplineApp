@@ -32,6 +32,7 @@ public class TaskService {
         return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
     }
 
+    @Transactional
     public void deleteTask(Long taskId) {
         serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
         taskRepository.delete(getTaskOrThrowIfNotExist(taskId));

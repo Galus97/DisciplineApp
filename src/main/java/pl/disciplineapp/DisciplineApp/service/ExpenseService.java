@@ -32,6 +32,7 @@ public class ExpenseService {
         return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
     }
 
+    @Transactional
     public void deleteExpense(Long expenseId) {
         serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
         expenseRepository.delete(getExpenseOrThrowIfNotExist(expenseId));

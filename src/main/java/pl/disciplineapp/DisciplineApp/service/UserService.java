@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,7 @@ public class UserService {
         return UserResponse.fromEntity(getUserOrThrowIfNotExist(userId));
     }
 
-    public void deleteUser(Long userId) {
-        throwIfIdIsNotValid(userId);
-        userRepository.delete(getUserOrThrowIfNotExist(userId));
-    }
-
+    @Transactional
     public UserResponse saveNewUser(UserRequest userRequest) throws ValidationException {
         throwIfRequestIsNull(userRequest);
         User user = buildUser(userRequest);
@@ -41,6 +38,13 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        throwIfIdIsNotValid(userId);
+        userRepository.delete(getUserOrThrowIfNotExist(userId));
+    }
+
+    @Transactional
     public UserResponse updateUser(UserRequest userRequest) {
         throwIfRequestIsNull(userRequest);
         throwIfIdIsNotValid(userRequest.getUserId());

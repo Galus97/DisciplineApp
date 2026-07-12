@@ -2,7 +2,6 @@ package pl.disciplineapp.DisciplineApp.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import pl.disciplineapp.DisciplineApp.entity.User;
 
 import java.time.LocalDateTime;
 
@@ -16,5 +15,5 @@ public class TaskRequest {
     private LocalDateTime createdAt;
     private LocalDateTime completedAt;
     private LocalDateTime deadline;
-    private User user;
+    private Long userId;
 }

@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SavingService {
     private final SavingRepository savingRepository;
+    private final UserService userService;
     private final MessageService messageService;
     private final ServiceValidator serviceValidator;
 
@@ -25,16 +27,19 @@ public class SavingService {
         return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
     }
 
+    @Transactional
     public SavingResponse saveSaving(SavingRequest savingRequest) {
         serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
         return SavingResponse.fromEntity(savingRepository.save(buildSaving(savingRequest)));
     }
 
+    @Transactional
     public void deleteSaving(Long savingId) {
         serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
         savingRepository.delete(getSavingOrThrowIfNotExist(savingId));
     }
 
+    @Transactional
     public SavingResponse updateSaving(SavingRequest savingRequest) {
         serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
         serviceValidator.throwIfIdIsNotValid(savingRequest.getSavingId(), ErrorMessages.INVALID_SAVING_ID);
@@ -44,6 +49,7 @@ public class SavingService {
         existingSaving.setTotalValue(savingRequest.getTotalValue());
         existingSaving.setQuantity(savingRequest.getQuantity());
         existingSaving.setUnitPrice(savingRequest.getUnitPrice());
+        existingSaving.setUser(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()));
 
         return SavingResponse.fromEntity(savingRepository.save(existingSaving));
     }
@@ -59,7 +65,7 @@ public class SavingService {
                 .totalValue(savingRequest.getTotalValue())
                 .quantity(savingRequest.getQuantity())
                 .unitPrice(savingRequest.getUnitPrice())
-                .user(savingRequest.getUser())
+                .user(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()))
                 .build();
     }
 

@@ -2,7 +2,6 @@ package pl.disciplineapp.DisciplineApp.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import pl.disciplineapp.DisciplineApp.entity.User;
 
 @Getter
 @Builder
@@ -12,5 +11,5 @@ public class InvestmentRequest {
     private Float totalValue;
     private Float quantity;
     private Float unitPrice;
-    private User user;
+    private Long userId;
 }

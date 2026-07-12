@@ -13,6 +13,7 @@ import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
 import pl.disciplineapp.DisciplineApp.exception.ValidationException;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 import pl.disciplineapp.DisciplineApp.util.RegisterValidator;
+import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +22,16 @@ public class UserService {
     private final MessageService messageService;
     private final PasswordEncoder passwordEncoder;
     private final RegisterValidator registerValidator;
+    private final ServiceValidator serviceValidator;
 
     public UserResponse getUserResponse(Long userId) {
-        throwIfIdIsNotValid(userId);
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return UserResponse.fromEntity(getUserOrThrowIfNotExist(userId));
     }
 
     @Transactional
     public UserResponse saveNewUser(UserRequest userRequest) throws ValidationException {
-        throwIfRequestIsNull(userRequest);
+        serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_NOT_FOUND);
         User user = buildUser(userRequest);
         if(registerValidator.validateUser(user).isEmpty()){
             return UserResponse.fromEntity(userRepository.save(buildUser(userRequest)));
@@ -40,14 +42,14 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long userId) {
-        throwIfIdIsNotValid(userId);
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         userRepository.delete(getUserOrThrowIfNotExist(userId));
     }
 
     @Transactional
     public UserResponse updateUser(UserRequest userRequest) {
-        throwIfRequestIsNull(userRequest);
-        throwIfIdIsNotValid(userRequest.getUserId());
+        serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_NOT_FOUND);
+        serviceValidator.throwIfIdIsNotValid(userRequest.getUserId(), ErrorMessages.INVALID_USER_ID);
 
         User existingUser = getUserOrThrowIfNotExist(userRequest.getUserId());
         existingUser.setFirstName(userRequest.getFirstName());

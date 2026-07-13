@@ -41,6 +41,6 @@ public class InvestmentController {
 
     @GetMapping("/user/{userId}/all")
     public ResponseEntity<List<InvestmentResponse>> getAllInvestments(@PathVariable Long userId) {
-        return ResponseEntity.ok(investmentService.getAllInvestmentResponseByUser(userId));
+        return ResponseEntity.ok(investmentService.getAllInvestment(userId));
     }
 }

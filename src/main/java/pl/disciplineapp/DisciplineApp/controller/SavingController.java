@@ -40,6 +40,6 @@ public class SavingController {
 
     @GetMapping("/user/{userId}/all")
     public ResponseEntity<List<SavingResponse>> getAllSavings(@PathVariable Long userId) {
-        return ResponseEntity.ok(savingService.getAllSavingResponseByUser(userId));
+        return ResponseEntity.ok(savingService.getAllSaving(userId));
     }
 }

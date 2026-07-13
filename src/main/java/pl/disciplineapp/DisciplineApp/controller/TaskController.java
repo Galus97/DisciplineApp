@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.disciplineapp.DisciplineApp.dto.request.TaskRequest;
-import pl.disciplineapp.DisciplineApp.dto.response.SavingResponse;
 import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.service.TaskService;
 
@@ -48,6 +47,6 @@ public class TaskController {
 
     @GetMapping("/user/{userId}/all")
     public ResponseEntity<List<TaskResponse>> getAllTask(@PathVariable Long userId) {
-        return ResponseEntity.ok(taskService.getAllTaskResponseByUser(userId));
+        return ResponseEntity.ok(taskService.getAllTask(userId));
     }
 }

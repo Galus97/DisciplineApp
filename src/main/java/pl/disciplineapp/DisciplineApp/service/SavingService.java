@@ -54,7 +54,7 @@ public class SavingService {
         return SavingResponse.fromEntity(savingRepository.save(existingSaving));
     }
 
-    public List<SavingResponse> getAllSavingResponseByUser(Long userId) {
+    public List<SavingResponse> getAllSaving(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return SavingResponse.fromEntityList(savingRepository.findAllByUser_UserId(userId));
     }

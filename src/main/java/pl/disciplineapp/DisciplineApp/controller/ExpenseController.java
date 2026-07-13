@@ -39,7 +39,12 @@ public class ExpenseController {
     }
 
     @GetMapping("/user/{userId}/all")
-    public ResponseEntity<List<ExpenseResponse>> getAllExpense(@PathVariable Long userId) {
-        return ResponseEntity.ok(expenseService.getAllExpenseResponseByUser(userId));
+    public ResponseEntity<List<ExpenseResponse>> getAllExpenses(@PathVariable Long userId) {
+        return ResponseEntity.ok(expenseService.getAllExpense(userId));
+    }
+
+    @GetMapping("/user/{userId}/{from}/{to}")
+    public ResponseEntity<List<ExpenseResponse>> getExpenseDate(@PathVariable Long userId, @PathVariable String from, @PathVariable String to) {
+        return ResponseEntity.ok(expenseService.getExpensesInDate(userId, from, to));
     }
 }

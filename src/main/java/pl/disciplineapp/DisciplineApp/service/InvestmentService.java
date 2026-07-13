@@ -54,10 +54,11 @@ public class InvestmentService {
         investmentRepository.delete(getInvestmentOrThrowIfNotExist(investmentId));
     }
 
-    public List<InvestmentResponse> getAllInvestmentResponseByUser(Long userId) {
+    public List<InvestmentResponse> getAllInvestment(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser_UserId(userId));
     }
+
 
     private Investment buildInvestment(InvestmentRequest investmentRequest) {
         return Investment.builder()

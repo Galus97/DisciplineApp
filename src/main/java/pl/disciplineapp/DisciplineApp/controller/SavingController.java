@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.controller.crud;
+package pl.disciplineapp.DisciplineApp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +8,7 @@ import pl.disciplineapp.DisciplineApp.dto.response.SavingResponse;
 import pl.disciplineapp.DisciplineApp.service.SavingService;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ import java.net.URI;
 public class SavingController {
     private final SavingService savingService;
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<SavingResponse> showSaving(@PathVariable Long id) {
         return ResponseEntity.ok(savingService.getSavingResponse(id));
     }
@@ -37,4 +38,8 @@ public class SavingController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/user/{userId}/all")
+    public ResponseEntity<List<SavingResponse>> getAllSavings(@PathVariable Long userId) {
+        return ResponseEntity.ok(savingService.getAllSaving(userId));
+    }
 }

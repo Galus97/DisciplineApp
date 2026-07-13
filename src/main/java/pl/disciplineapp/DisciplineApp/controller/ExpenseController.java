@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.controller.crud;
+package pl.disciplineapp.DisciplineApp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +8,7 @@ import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.service.ExpenseService;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,5 +36,15 @@ public class ExpenseController {
     public ResponseEntity<Void> deleteExpense(@PathVariable Long id) {
         expenseService.deleteExpense(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}/all")
+    public ResponseEntity<List<ExpenseResponse>> getAllExpenses(@PathVariable Long userId) {
+        return ResponseEntity.ok(expenseService.getAllExpense(userId));
+    }
+
+    @GetMapping("/user/{userId}/{from}/{to}")
+    public ResponseEntity<List<ExpenseResponse>> getExpenseDate(@PathVariable Long userId, @PathVariable String from, @PathVariable String to) {
+        return ResponseEntity.ok(expenseService.getExpensesInDate(userId, from, to));
     }
 }

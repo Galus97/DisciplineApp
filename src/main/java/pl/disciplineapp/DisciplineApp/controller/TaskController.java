@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.controller.crud;
+package pl.disciplineapp.DisciplineApp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.service.TaskService;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,9 +39,14 @@ public class TaskController {
         return ResponseEntity.ok(taskService.updateTask(taskRequest));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void>  deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}/all")
+    public ResponseEntity<List<TaskResponse>> getAllTask(@PathVariable Long userId) {
+        return ResponseEntity.ok(taskService.getAllTask(userId));
     }
 }

@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.controller.crud;
+package pl.disciplineapp.DisciplineApp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +8,7 @@ import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
 import pl.disciplineapp.DisciplineApp.service.InvestmentService;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,5 +37,10 @@ public class InvestmentController {
     public ResponseEntity<Void> deleteInvestment(@PathVariable Long id) {
         investmentService.deleteInvestment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}/all")
+    public ResponseEntity<List<InvestmentResponse>> getAllInvestments(@PathVariable Long userId) {
+        return ResponseEntity.ok(investmentService.getAllInvestment(userId));
     }
 }

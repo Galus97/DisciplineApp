@@ -54,7 +54,7 @@ public class TaskService {
         return TaskResponse.fromEntity(taskRepository.save(existingTask));
     }
 
-    public List<TaskResponse> getAllTaskResponseByUser(Long userId) {
+    public List<TaskResponse> getAllTask(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return TaskResponse.fromEntityList(taskRepository.findAllByUser_UserId(userId));
     }

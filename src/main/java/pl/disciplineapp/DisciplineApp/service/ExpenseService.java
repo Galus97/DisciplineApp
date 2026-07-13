@@ -54,9 +54,13 @@ public class ExpenseService {
         return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
     }
 
-    public List<ExpenseResponse> getAllExpenseResponseByUser(Long userId) {
+    public List<ExpenseResponse> getAllExpense(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return ExpenseResponse.fromEntityList(expenseRepository.findAllByUser_UserId(userId));
+    }
+
+    public List<ExpenseResponse> getExpensesInDate(Long userId, String from, String to) {
+        return null;
     }
 
     private Expense buildExpense(ExpenseRequest expenseRequest) {

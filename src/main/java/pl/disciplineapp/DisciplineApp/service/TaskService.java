@@ -7,7 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.TaskRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
-import pl.disciplineapp.DisciplineApp.entity.Task;
+import pl.disciplineapp.DisciplineApp.model.Task;
 import pl.disciplineapp.DisciplineApp.exception.TaskNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;

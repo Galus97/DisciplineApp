@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.entity;
+package pl.disciplineapp.DisciplineApp.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -15,15 +15,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "investments")
-public class Investment {
+@Table(name = "expenses")
+public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long investmentId;
+    private Long expenseId;
 
     @NotBlank
-    private String investmentType;
+    private String expenseType;
 
     @NotNull
     private Float totalValue;

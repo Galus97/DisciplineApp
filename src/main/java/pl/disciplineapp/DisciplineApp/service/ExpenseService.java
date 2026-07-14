@@ -7,7 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.ExpenseRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
-import pl.disciplineapp.DisciplineApp.entity.Expense;
+import pl.disciplineapp.DisciplineApp.model.Expense;
 import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;

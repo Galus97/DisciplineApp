@@ -8,7 +8,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
-import pl.disciplineapp.DisciplineApp.entity.User;
+import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
 import pl.disciplineapp.DisciplineApp.exception.ValidationException;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;

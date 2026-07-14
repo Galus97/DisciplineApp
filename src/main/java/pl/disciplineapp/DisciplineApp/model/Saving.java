@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.entity;
+package pl.disciplineapp.DisciplineApp.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

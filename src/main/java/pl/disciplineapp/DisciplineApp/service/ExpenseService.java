@@ -49,6 +49,7 @@ public class ExpenseService {
         existingExpense.setTotalValue(expenseRequest.getTotalValue());
         existingExpense.setQuantity(expenseRequest.getQuantity());
         existingExpense.setUnitPrice(expenseRequest.getUnitPrice());
+        existingExpense.setCreatedAt(expenseRequest.getCreatedAt());
         existingExpense.setUser(userService.getUserOrThrowIfNotExist(expenseRequest.getUserId()));
 
         return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
@@ -69,6 +70,7 @@ public class ExpenseService {
                 .totalValue(expenseRequest.getTotalValue())
                 .quantity(expenseRequest.getQuantity())
                 .unitPrice(expenseRequest.getUnitPrice())
+                .createdAt(expenseRequest.getCreatedAt())
                 .user(userService.getUserOrThrowIfNotExist(expenseRequest.getUserId()))
                 .build();
     }

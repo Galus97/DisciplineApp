@@ -2,11 +2,12 @@ package pl.disciplineapp.DisciplineApp.dto.response;
 
 import pl.disciplineapp.DisciplineApp.entity.Investment;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public record InvestmentResponse(Long investmentId, String investmentType, Float totalValue,
-                                 Float quantity, Float unitPrice, Long userId) {
+                                 Float quantity, Float unitPrice, LocalDateTime createdAt, Long userId) {
 
     public static InvestmentResponse fromEntity(Investment investment) {
         return new InvestmentResponse(
@@ -15,6 +16,7 @@ public record InvestmentResponse(Long investmentId, String investmentType, Float
                 investment.getTotalValue(),
                 investment.getQuantity(),
                 investment.getUnitPrice(),
+                investment.getCreatedAt(),
                 investment.getUser() != null ? investment.getUser().getUserId() : null
         );
     }

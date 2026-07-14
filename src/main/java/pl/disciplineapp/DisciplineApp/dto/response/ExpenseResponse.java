@@ -2,11 +2,12 @@ package pl.disciplineapp.DisciplineApp.dto.response;
 
 import pl.disciplineapp.DisciplineApp.entity.Expense;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public record ExpenseResponse(Long expenseId, String expenseType, Float totalValue, Float quantity,
-                              Float unitPrice, Long userId) {
+                              Float unitPrice, LocalDateTime createdAt, Long userId) {
     public static ExpenseResponse fromEntity(Expense expense) {
         return new ExpenseResponse(
                 expense.getExpenseId(),
@@ -14,6 +15,7 @@ public record ExpenseResponse(Long expenseId, String expenseType, Float totalVal
                 expense.getTotalValue(),
                 expense.getQuantity(),
                 expense.getUnitPrice(),
+                expense.getCreatedAt(),
                 expense.getUser() != null ? expense.getUser().getUserId() : null
         );
     }

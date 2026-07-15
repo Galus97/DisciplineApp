@@ -7,7 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.SavingRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.SavingResponse;
-import pl.disciplineapp.DisciplineApp.entity.Saving;
+import pl.disciplineapp.DisciplineApp.model.Saving;
 import pl.disciplineapp.DisciplineApp.exception.SavingNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;

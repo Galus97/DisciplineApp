@@ -1,7 +1,7 @@
 package pl.disciplineapp.DisciplineApp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.disciplineapp.DisciplineApp.entity.User;
+import pl.disciplineapp.DisciplineApp.model.User;
 
 import java.util.Optional;
 

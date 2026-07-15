@@ -7,7 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.InvestmentRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
-import pl.disciplineapp.DisciplineApp.entity.Investment;
+import pl.disciplineapp.DisciplineApp.model.Investment;
 import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;

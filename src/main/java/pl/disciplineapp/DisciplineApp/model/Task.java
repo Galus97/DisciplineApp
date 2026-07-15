@@ -1,39 +1,36 @@
-package pl.disciplineapp.DisciplineApp.entity;
+package pl.disciplineapp.DisciplineApp.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@ToString
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "savings")
-public class Saving {
+@Table(name = "tasks")
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long savingId;
+    private Long taskId;
 
     @NotBlank
-    private String savingType;
+    private String taskName;
 
-    @NotNull
-    private Float totalValue;
+    @NotBlank
+    private String description;
 
-    @NotNull
-    private Float quantity;
-
-    @NotNull
-    private Float unitPrice;
+    private boolean completed;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime completedAt;
+
+    private LocalDateTime deadline;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

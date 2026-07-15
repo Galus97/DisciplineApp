@@ -2,6 +2,7 @@ package pl.disciplineapp.DisciplineApp.component;
 
 public final class ErrorMessages {
     public static final String ERROR = "error";
+    public static final String INVALID_PARAMS = "error.paramsAreNotValid";
 
     //USER
     public static final String USER_NOT_FOUND = "error.userNotFound";

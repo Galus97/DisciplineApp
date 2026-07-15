@@ -1,6 +1,6 @@
 package pl.disciplineapp.DisciplineApp.dto.response;
 
-import pl.disciplineapp.DisciplineApp.entity.Investment;
+import pl.disciplineapp.DisciplineApp.model.Investment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

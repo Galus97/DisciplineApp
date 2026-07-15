@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
-import pl.disciplineapp.DisciplineApp.entity.User;
+import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.repository.UserRepository;
 
 import java.util.ArrayList;

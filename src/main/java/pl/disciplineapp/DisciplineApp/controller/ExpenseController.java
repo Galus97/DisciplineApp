@@ -43,8 +43,15 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseService.getAllExpense(userId));
     }
 
-    @GetMapping("/user/{userId}/{from}/{to}")
-    public ResponseEntity<List<ExpenseResponse>> getExpenseDate(@PathVariable Long userId, @PathVariable String from, @PathVariable String to) {
-        return ResponseEntity.ok(expenseService.getExpensesInDate(userId, from, to));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ExpenseResponse>> getExpenses(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to) {
+
+        if (from != null && to != null) {
+            return ResponseEntity.ok(expenseService.getExpensesBetweenDates(userId, from, to));
+        }
+        return ResponseEntity.ok(expenseService.getAllExpense(userId));
     }
 }

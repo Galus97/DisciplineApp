@@ -31,7 +31,7 @@ public class UserService {
 
     @Transactional
     public UserResponse saveNewUser(UserRequest userRequest) throws ValidationException {
-        serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_NOT_FOUND);
+        serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_REQUEST_IS_NULL);
         User user = buildUser(userRequest);
         if(registerValidator.validateUser(user).isEmpty()){
             return UserResponse.fromEntity(userRepository.save(buildUser(userRequest)));
@@ -48,7 +48,7 @@ public class UserService {
 
     @Transactional
     public UserResponse updateUser(UserRequest userRequest) {
-        serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_NOT_FOUND);
+        serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_REQUEST_IS_NULL);
         serviceValidator.throwIfIdIsNotValid(userRequest.getUserId(), ErrorMessages.INVALID_USER_ID);
 
         User existingUser = getUserOrThrowIfNotExist(userRequest.getUserId());

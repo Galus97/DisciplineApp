@@ -12,6 +12,8 @@ import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -60,6 +62,23 @@ public class InvestmentService {
         return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser_UserId(userId));
     }
 
+    public List<InvestmentResponse> getInvestmentsBetweenDates(Long userId, String from, String to) {
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+        //This throws exception if user doesn't exist
+        userService.getUserOrThrowIfNotExist(userId);
+
+        if (from == null || to == null) {
+            throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);
+        }
+        try {
+            LocalDateTime fromDateTime = LocalDateTime.parse(from);
+            LocalDateTime toDateTime = LocalDateTime.parse(to);
+            return InvestmentResponse.fromEntityList(
+                    investmentRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
+        }
+    }
 
     private Investment buildInvestment(InvestmentRequest investmentRequest) {
         return Investment.builder()

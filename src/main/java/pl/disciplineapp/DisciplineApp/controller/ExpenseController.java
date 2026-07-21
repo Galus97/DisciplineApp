@@ -38,11 +38,6 @@ public class ExpenseController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}/all")
-    public ResponseEntity<List<ExpenseResponse>> getAllExpenses(@PathVariable Long userId) {
-        return ResponseEntity.ok(expenseService.getAllExpense(userId));
-    }
-
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ExpenseResponse>> getExpenses(
             @PathVariable Long userId,

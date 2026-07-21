@@ -39,8 +39,15 @@ public class InvestmentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}/all")
-    public ResponseEntity<List<InvestmentResponse>> getAllInvestments(@PathVariable Long userId) {
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<InvestmentResponse>> getInvestments(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to) {
+
+        if (from != null && to != null) {
+            return ResponseEntity.ok(investmentService.getInvestmentsBetweenDates(userId, from, to));
+        }
         return ResponseEntity.ok(investmentService.getAllInvestment(userId));
     }
 }

@@ -2,7 +2,6 @@ package pl.disciplineapp.DisciplineApp.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
@@ -10,14 +9,11 @@ import pl.disciplineapp.DisciplineApp.dto.request.ExpenseRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.model.Expense;
 import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
-import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -69,7 +65,7 @@ public class ExpenseService {
     public List<ExpenseResponse> getExpensesBetweenDates(Long userId, String from, String to) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         //This throws exception if user doesn't exist
-        User user = userService.getUserOrThrowIfNotExist(userId);
+        userService.getUserOrThrowIfNotExist(userId);
 
         if (from == null || to == null) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);

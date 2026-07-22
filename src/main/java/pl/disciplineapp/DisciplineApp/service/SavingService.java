@@ -12,6 +12,8 @@ import pl.disciplineapp.DisciplineApp.exception.SavingNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -58,6 +60,25 @@ public class SavingService {
     public List<SavingResponse> getAllSaving(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return SavingResponse.fromEntityList(savingRepository.findAllByUser_UserId(userId));
+    }
+
+    public List<SavingResponse> getSavingBetweenDates(Long userId, String from, String to) {
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+        //This throws exception if user doesn't exist
+        userService.getUserOrThrowIfNotExist(userId);
+
+        if (from == null || to == null) {
+            throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);
+        }
+
+        try {
+            LocalDateTime fromDateTime = LocalDateTime.parse(from);
+            LocalDateTime toDateTime = LocalDateTime.parse(to);
+            return SavingResponse.fromEntityList(
+                    savingRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
+        }
     }
 
     private Saving buildSaving(SavingRequest savingRequest) {

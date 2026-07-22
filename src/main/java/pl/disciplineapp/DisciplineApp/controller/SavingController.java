@@ -38,8 +38,14 @@ public class SavingController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}/all")
-    public ResponseEntity<List<SavingResponse>> getAllSavings(@PathVariable Long userId) {
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<SavingResponse>> getSavings(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to) {
+        if (from != null && to != null) {
+            return ResponseEntity.ok(savingService.getSavingBetweenDates(userId, from, to));
+        }
         return ResponseEntity.ok(savingService.getAllSaving(userId));
     }
 }

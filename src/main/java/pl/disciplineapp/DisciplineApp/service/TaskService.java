@@ -12,6 +12,8 @@ import pl.disciplineapp.DisciplineApp.exception.TaskNotFoundException;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -57,6 +59,25 @@ public class TaskService {
     public List<TaskResponse> getAllTask(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return TaskResponse.fromEntityList(taskRepository.findAllByUser_UserId(userId));
+    }
+
+    public List<TaskResponse> getTasksBetweenDates(Long userId, String from, String to) {
+        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+        //This throws exception if user doesn't exist
+        userService.getUserOrThrowIfNotExist(userId);
+
+        if (from == null || to == null) {
+           throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);
+        }
+
+        try {
+            LocalDateTime fromDateTime = LocalDateTime.parse(from);
+            LocalDateTime toDateTime = LocalDateTime.parse(to);
+            return TaskResponse.fromEntityList(
+                    taskRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
+        }
     }
 
     private Task buildTask(TaskRequest taskRequest) {

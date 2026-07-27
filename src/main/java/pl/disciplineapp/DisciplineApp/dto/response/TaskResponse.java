@@ -5,6 +5,7 @@ import pl.disciplineapp.DisciplineApp.model.Task;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record TaskResponse(Long taskId, String taskName, String description, boolean completed, LocalDateTime createdAt,
                            LocalDateTime completedAt, LocalDateTime deadline, Long userId) {
@@ -23,12 +24,8 @@ public record TaskResponse(Long taskId, String taskName, String description, boo
     }
 
     public static List<TaskResponse> fromEntityList(List<Task> taskList) {
-        List<TaskResponse> taskResponseList = new ArrayList<>();
-        if (!taskList.isEmpty()) {
-            for (Task task : taskList) {
-                taskResponseList.add(fromEntity(task));
-            }
-        }
-        return taskResponseList;
+        return taskList.stream()
+                .map(TaskResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }

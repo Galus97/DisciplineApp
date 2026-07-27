@@ -5,6 +5,7 @@ import pl.disciplineapp.DisciplineApp.model.Expense;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record ExpenseResponse(Long expenseId, String expenseType, Float totalValue, Float quantity,
                               Float unitPrice, LocalDateTime createdAt, Long userId) {
@@ -21,12 +22,8 @@ public record ExpenseResponse(Long expenseId, String expenseType, Float totalVal
     }
 
     public static List<ExpenseResponse> fromEntityList(List<Expense> expenseList) {
-        List<ExpenseResponse> expenseResponseList = new ArrayList<>();
-        if (!expenseList.isEmpty()) {
-            for (Expense expense : expenseList) {
-                expenseResponseList.add(fromEntity(expense));
-            }
-        }
-        return expenseResponseList;
+        return expenseList.stream()
+                .map(ExpenseResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }

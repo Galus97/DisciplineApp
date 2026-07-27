@@ -5,6 +5,7 @@ import pl.disciplineapp.DisciplineApp.model.Investment;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record InvestmentResponse(Long investmentId, String investmentType, Float totalValue,
                                  Float quantity, Float unitPrice, LocalDateTime createdAt, Long userId) {
@@ -22,13 +23,8 @@ public record InvestmentResponse(Long investmentId, String investmentType, Float
     }
 
     public static List<InvestmentResponse> fromEntityList(List<Investment> investmentList) {
-        List<InvestmentResponse> investmentResponseList = new ArrayList<>();
-
-        if (!investmentList.isEmpty()) {
-            for (Investment investment : investmentList) {
-                investmentResponseList.add(fromEntity(investment));
-            }
-        }
-        return investmentResponseList;
+        return investmentList.stream()
+                .map(InvestmentResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }

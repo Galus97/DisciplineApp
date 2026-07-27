@@ -5,6 +5,7 @@ import pl.disciplineapp.DisciplineApp.model.Saving;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record SavingResponse(Long savingId, String savingType, Float TotalValue,
                              Float quantity, Float unitPrice, LocalDateTime createdAt, Long userId) {
@@ -21,13 +22,8 @@ public record SavingResponse(Long savingId, String savingType, Float TotalValue,
     }
 
     public static List<SavingResponse> fromEntityList(List<Saving> savingList) {
-        List<SavingResponse> savingResponseList = new ArrayList<>();
-
-        if (!savingList.isEmpty()) {
-            for (Saving saving : savingList) {
-                savingResponseList.add(fromEntity(saving));
-            }
-        }
-        return savingResponseList;
+        return savingList.stream()
+                .map(SavingResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }

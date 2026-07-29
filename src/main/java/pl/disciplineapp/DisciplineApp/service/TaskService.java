@@ -94,7 +94,7 @@ public class TaskService {
 
     private Task getTaskOrThrowIfNotExist(Long taskId) {
         return taskRepository.findById(taskId).orElseThrow(
-                () -> new TaskNotFoundException(messageService.getMessage(ErrorMessages.TASK_NOT_FOUND)));
+                () -> new TaskNotFoundException(messageService.getMessage(ErrorMessages.TASK_NOT_FOUND, taskId)));
     }
 
 }

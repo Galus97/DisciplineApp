@@ -94,6 +94,6 @@ public class SavingService {
 
     private Saving getSavingOrThrowIfNotExist(Long savingId) {
         return savingRepository.findById(savingId).orElseThrow(
-                () -> new SavingNotFoundException(messageService.getMessage(ErrorMessages.SAVING_NOT_FOUND)));
+                () -> new SavingNotFoundException(messageService.getMessage(ErrorMessages.SAVING_NOT_FOUND, savingId)));
     }
 }

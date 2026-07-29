@@ -91,8 +91,9 @@ public class InvestmentService {
                 .build();
     }
 
-    private Investment getInvestmentOrThrowIfNotExist(Long id) {
-        return investmentRepository.findById(id).orElseThrow(
-                () -> new InvestmentNotFoundException(messageService.getMessage(ErrorMessages.INVESTMENT_NOT_FOUND)));
+    private Investment getInvestmentOrThrowIfNotExist(Long investmentId) {
+        return investmentRepository.findById(investmentId).orElseThrow(
+                () -> new InvestmentNotFoundException(messageService.getMessage(
+                        ErrorMessages.INVESTMENT_NOT_FOUND, investmentId)));
     }
 }

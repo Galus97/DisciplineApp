@@ -77,6 +77,6 @@ public class UserService {
     //Using this method in others Services
     public User getUserOrThrowIfNotExist(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(messageService.getMessage(ErrorMessages.USER_NOT_FOUND)));
+                () -> new UserNotFoundException(messageService.getMessage(ErrorMessages.USER_NOT_FOUND, userId)));
     }
 }

@@ -3,6 +3,7 @@ package pl.disciplineapp.DisciplineApp.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -26,10 +27,14 @@ public class Task {
 
     private boolean completed;
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @CreationTimestamp
     private LocalDateTime completedAt;
 
+    @CreationTimestamp
     private LocalDateTime deadline;
 
     @ManyToOne

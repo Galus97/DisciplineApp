@@ -23,6 +23,9 @@ public class Expense {
     @NotBlank
     private String expenseType;
 
+    @NotBlank
+    private String expenseDescription;
+
     @NotNull
     private Float totalValue;
 

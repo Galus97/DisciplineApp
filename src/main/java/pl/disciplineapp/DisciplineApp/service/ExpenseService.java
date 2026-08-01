@@ -9,6 +9,7 @@ import pl.disciplineapp.DisciplineApp.dto.request.ExpenseRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.model.Expense;
 import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
+import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.repository.ExpenseRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
@@ -48,6 +49,7 @@ public class ExpenseService {
 
         Expense existingExpense = getExpenseOrThrowIfNotExist(expenseRequest.getExpenseId());
         existingExpense.setExpenseType(expenseRequest.getExpenseType());
+        existingExpense.setExpenseDescription(expenseRequest.getExpenseDescription());
         existingExpense.setTotalValue(expenseRequest.getTotalValue());
         existingExpense.setQuantity(expenseRequest.getQuantity());
         existingExpense.setUnitPrice(expenseRequest.getUnitPrice());
@@ -84,6 +86,7 @@ public class ExpenseService {
     private Expense buildExpense(ExpenseRequest expenseRequest) {
         return Expense.builder()
                 .expenseType(expenseRequest.getExpenseType())
+                .expenseDescription(expenseRequest.getExpenseDescription())
                 .totalValue(expenseRequest.getTotalValue())
                 .quantity(expenseRequest.getQuantity())
                 .unitPrice(expenseRequest.getUnitPrice())

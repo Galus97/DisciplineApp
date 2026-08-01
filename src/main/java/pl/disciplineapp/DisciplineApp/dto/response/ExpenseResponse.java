@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record ExpenseResponse(Long expenseId, String expenseType, Float totalValue, Float quantity,
-                              Float unitPrice, LocalDateTime createdAt, Long userId) {
+public record ExpenseResponse(Long expenseId, String expenseType, String expenseDescription, Float totalValue,
+                              Float quantity, Float unitPrice, LocalDateTime createdAt, Long userId) {
+
     public static ExpenseResponse fromEntity(Expense expense) {
         return new ExpenseResponse(
                 expense.getExpenseId(),
                 expense.getExpenseType(),
+                expense.getExpenseDescription(),
                 expense.getTotalValue(),
                 expense.getQuantity(),
                 expense.getUnitPrice(),

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class ExpenseRequest {
     private Long expenseId;
     private String expenseType;
+    private String expenseDescription;
     private Float totalValue;
     private Float quantity;
     private Float unitPrice;

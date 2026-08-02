@@ -25,49 +25,49 @@ public class ExpenseService {
     private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
-    public ExpenseResponse getExpenseResponse(Long expenseId) {
+    public ExpenseResponse getExpenseResponse(Long expenseId, User user) {
         serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
-        return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId));
+        return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId, user));
     }
 
     @Transactional
-    public ExpenseResponse saveExpense(ExpenseRequest expenseRequest) {
+    public ExpenseResponse saveExpense(ExpenseRequest expenseRequest, User user) {
         serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
-        return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest)));
+        return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest, user)));
     }
 
     @Transactional
-    public void deleteExpense(Long expenseId) {
+    public void deleteExpense(Long expenseId, User user) {
         serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
-        expenseRepository.delete(getExpenseOrThrowIfNotExist(expenseId));
+        expenseRepository.delete(getExpenseOrThrowIfNotExist(expenseId, user));
     }
 
     @Transactional
-    public ExpenseResponse updateExpense(ExpenseRequest expenseRequest) {
+    public ExpenseResponse updateExpense(ExpenseRequest expenseRequest, User user) {
         serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
         serviceValidator.throwIfIdIsNotValid(expenseRequest.getExpenseId(), ErrorMessages.INVALID_EXPENSE_ID);
 
-        Expense existingExpense = getExpenseOrThrowIfNotExist(expenseRequest.getExpenseId());
+        Expense existingExpense = getExpenseOrThrowIfNotExist(expenseRequest.getExpenseId(), user);
         existingExpense.setExpenseType(expenseRequest.getExpenseType());
         existingExpense.setExpenseDescription(expenseRequest.getExpenseDescription());
         existingExpense.setTotalValue(expenseRequest.getTotalValue());
         existingExpense.setQuantity(expenseRequest.getQuantity());
         existingExpense.setUnitPrice(expenseRequest.getUnitPrice());
-        existingExpense.setCreatedAt(expenseRequest.getCreatedAt());
-        existingExpense.setUser(userService.getUserOrThrowIfNotExist(expenseRequest.getUserId()));
+        //existingExpense.setCreatedAt(expenseRequest.getCreatedAt());
+        //existingExpense.setUser(user);
 
         return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
     }
 
-    public List<ExpenseResponse> getAllExpense(Long userId) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        return ExpenseResponse.fromEntityList(expenseRepository.findAllByUser_UserId(userId));
+    public List<ExpenseResponse> getAllExpense(User user) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
+        return ExpenseResponse.fromEntityList(expenseRepository.findAllByUser(user));
     }
 
-    public List<ExpenseResponse> getExpensesBetweenDates(Long userId, String from, String to) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+    public List<ExpenseResponse> getExpensesBetweenDates(User user, String from, String to) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
         //This throws exception if user doesn't exist
-        userService.getUserOrThrowIfNotExist(userId);
+        userService.getUserOrThrowIfNotExist(user.getUserId());
 
         if (from == null || to == null) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);
@@ -77,13 +77,13 @@ public class ExpenseService {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
             return ExpenseResponse.fromEntityList(
-                    expenseRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+                    expenseRepository.findAllByUserAndCreatedAtBetween(user, fromDateTime, toDateTime));
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
         }
     }
 
-    private Expense buildExpense(ExpenseRequest expenseRequest) {
+    private Expense buildExpense(ExpenseRequest expenseRequest, User user) {
         return Expense.builder()
                 .expenseType(expenseRequest.getExpenseType())
                 .expenseDescription(expenseRequest.getExpenseDescription())
@@ -91,13 +91,13 @@ public class ExpenseService {
                 .quantity(expenseRequest.getQuantity())
                 .unitPrice(expenseRequest.getUnitPrice())
                 .createdAt(expenseRequest.getCreatedAt())
-                .user(userService.getUserOrThrowIfNotExist(expenseRequest.getUserId()))
+                .user(user)
                 .build();
     }
 
-    private Expense getExpenseOrThrowIfNotExist(Long expenseId) {
-        return expenseRepository.findById(expenseId).orElseThrow(
-                () -> new ExpenseNotFoundException(messageService.getMessage(
-                        ErrorMessages.EXPENSE_NOT_FOUND, expenseId)));
+    private Expense getExpenseOrThrowIfNotExist(Long expenseId, User user) {
+        return expenseRepository.findByExpenseIdAndUser(expenseId, user)
+                .orElseThrow(() -> new ExpenseNotFoundException(
+                        messageService.getMessage(ErrorMessages.EXPENSE_NOT_FOUND, expenseId)));
     }
 }

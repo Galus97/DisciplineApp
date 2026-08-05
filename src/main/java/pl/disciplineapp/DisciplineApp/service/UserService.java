@@ -1,6 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ public class UserService {
     private final RegisterValidator registerValidator;
     private final ServiceValidator serviceValidator;
 
+    @Transactional(readOnly = true)
     public UserResponse getUserResponse(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return UserResponse.fromEntity(getUserOrThrowIfNotExist(userId));

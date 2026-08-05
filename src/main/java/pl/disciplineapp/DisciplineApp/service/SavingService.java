@@ -1,6 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -24,6 +24,7 @@ public class SavingService {
     private final MessageService messageService;
     private final ServiceValidator serviceValidator;
 
+    @Transactional(readOnly = true)
     public SavingResponse getSavingResponse(Long savingId) {
         serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
         return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
@@ -57,11 +58,13 @@ public class SavingService {
         return SavingResponse.fromEntity(savingRepository.save(existingSaving));
     }
 
+    @Transactional(readOnly = true)
     public List<SavingResponse> getAllSaving(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return SavingResponse.fromEntityList(savingRepository.findAllByUser_UserId(userId));
     }
 
+    @Transactional(readOnly = true)
     public List<SavingResponse> getSavingBetweenDates(Long userId, String from, String to) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         //This throws exception if user doesn't exist

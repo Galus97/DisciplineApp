@@ -1,6 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -24,6 +24,7 @@ public class TaskService {
     private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
+    @Transactional(readOnly = true)
     public TaskResponse getTaskResponse(Long taskId) {
         serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
         return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
@@ -56,11 +57,13 @@ public class TaskService {
         return TaskResponse.fromEntity(taskRepository.save(existingTask));
     }
 
+    @Transactional(readOnly = true)
     public List<TaskResponse> getAllTask(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return TaskResponse.fromEntityList(taskRepository.findAllByUser_UserId(userId));
     }
 
+    @Transactional(readOnly = true)
     public List<TaskResponse> getTasksBetweenDates(Long userId, String from, String to) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         //This throws exception if user doesn't exist

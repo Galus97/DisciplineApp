@@ -1,6 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -24,6 +24,7 @@ public class InvestmentService {
     private final MessageService messageService;
     private final ServiceValidator serviceValidator;
 
+    @Transactional(readOnly = true)
     public InvestmentResponse getInvestment(Long investmentId) {
         serviceValidator.throwIfIdIsNotValid(investmentId, ErrorMessages.INVALID_INVESTMENT_ID);
         return InvestmentResponse.fromEntity(getInvestmentOrThrowIfNotExist(investmentId));
@@ -57,11 +58,13 @@ public class InvestmentService {
         investmentRepository.delete(getInvestmentOrThrowIfNotExist(investmentId));
     }
 
+    @Transactional(readOnly = true)
     public List<InvestmentResponse> getAllInvestment(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser_UserId(userId));
     }
 
+    @Transactional(readOnly = true)
     public List<InvestmentResponse> getInvestmentsBetweenDates(Long userId, String from, String to) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         //This throws exception if user doesn't exist

@@ -1,6 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
@@ -25,6 +25,7 @@ public class ExpenseService {
     private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
+    @Transactional(readOnly = true)
     public ExpenseResponse getExpenseResponse(Long expenseId, User user) {
         serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
         return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId, user));
@@ -59,11 +60,13 @@ public class ExpenseService {
         return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
     }
 
+    @Transactional(readOnly = true)
     public List<ExpenseResponse> getAllExpense(User user) {
         serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
         return ExpenseResponse.fromEntityList(expenseRepository.findAllByUser(user));
     }
 
+    @Transactional(readOnly = true)
     public List<ExpenseResponse> getExpensesBetweenDates(User user, String from, String to) {
         serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
         //This throws exception if user doesn't exist

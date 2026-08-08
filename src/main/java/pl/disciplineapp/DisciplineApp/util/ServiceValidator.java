@@ -22,7 +22,7 @@ public class ServiceValidator {
         }
     }
 
-    public void throwIfEmailAlreadyExist(String email) {
+    public void throwIfEmailIsNotValid(String email) {
         if (email == null || email.isBlank()) {
            throw new IllegalArgumentException(messageService.getMessage(ErrorMessages.EMAIL_IS_INVALID, email));
         }

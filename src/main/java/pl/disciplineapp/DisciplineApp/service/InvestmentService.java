@@ -9,6 +9,7 @@ import pl.disciplineapp.DisciplineApp.dto.request.InvestmentRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
 import pl.disciplineapp.DisciplineApp.model.Investment;
 import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
+import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.repository.InvestmentRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
@@ -61,7 +62,8 @@ public class InvestmentService {
     @Transactional(readOnly = true)
     public List<InvestmentResponse> getAllInvestment(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser_UserId(userId));
+        User user = userService.getUserOrThrowIfNotExist(userId);
+        return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser(user));
     }
 
     @Transactional(readOnly = true)

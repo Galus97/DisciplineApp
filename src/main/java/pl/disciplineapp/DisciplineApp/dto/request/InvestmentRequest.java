@@ -1,5 +1,7 @@
 package pl.disciplineapp.DisciplineApp.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,10 +11,14 @@ import java.time.LocalDateTime;
 @Builder
 public class InvestmentRequest {
     private Long investmentId;
+    @NotBlank
     private String investmentType;
+    @NotNull
     private Float totalValue;
+    @NotNull
     private Float quantity;
+    @NotNull
     private Float unitPrice;
-    private LocalDateTime createdAt;
+    @NotNull
     private Long userId;
 }

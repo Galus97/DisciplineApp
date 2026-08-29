@@ -93,7 +93,6 @@ public class ExpenseService {
                 .totalValue(expenseRequest.getTotalValue())
                 .quantity(expenseRequest.getQuantity())
                 .unitPrice(expenseRequest.getUnitPrice())
-                .createdAt(expenseRequest.getCreatedAt())
                 .user(user)
                 .build();
     }

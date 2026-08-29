@@ -52,7 +52,6 @@ public class SavingService {
         existingSaving.setTotalValue(savingRequest.getTotalValue());
         existingSaving.setQuantity(savingRequest.getQuantity());
         existingSaving.setUnitPrice(savingRequest.getUnitPrice());
-        existingSaving.setCreatedAt(savingRequest.getCreatedAt());
         existingSaving.setUser(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()));
 
         return SavingResponse.fromEntity(savingRepository.save(existingSaving));
@@ -90,7 +89,6 @@ public class SavingService {
                 .totalValue(savingRequest.getTotalValue())
                 .quantity(savingRequest.getQuantity())
                 .unitPrice(savingRequest.getUnitPrice())
-                .createdAt(savingRequest.getCreatedAt())
                 .user(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()))
                 .build();
     }

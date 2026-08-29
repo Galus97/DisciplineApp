@@ -47,7 +47,6 @@ public class InvestmentService {
         existingInvestment.setTotalValue(investmentRequest.getTotalValue());
         existingInvestment.setQuantity(investmentRequest.getQuantity());
         existingInvestment.setUnitPrice(investmentRequest.getUnitPrice());
-        existingInvestment.setCreatedAt(investmentRequest.getCreatedAt());
         existingInvestment.setUser(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()));
 
         return InvestmentResponse.fromEntity(investmentRepository.save(existingInvestment));
@@ -91,7 +90,6 @@ public class InvestmentService {
                 .totalValue(investmentRequest.getTotalValue())
                 .quantity(investmentRequest.getQuantity())
                 .unitPrice(investmentRequest.getUnitPrice())
-                .createdAt(investmentRequest.getCreatedAt())
                 .user(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()))
                 .build();
     }

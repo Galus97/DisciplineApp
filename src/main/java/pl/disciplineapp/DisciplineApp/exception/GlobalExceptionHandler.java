@@ -1,16 +1,26 @@
 package pl.disciplineapp.DisciplineApp.exception;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -46,5 +56,14 @@ public class GlobalExceptionHandler {
         Map<String, String> response = new HashMap<>();
         response.put(ErrorMessages.ERROR,  exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    private String getErrorMessage(ObjectError objectError) {
+        if (objectError instanceof FieldError) {
+            String field = ((FieldError) objectError).getField();
+            String defaultMessage = objectError.getDefaultMessage();
+            return field + " " + defaultMessage;
+        }
+        return objectError.getDefaultMessage();
     }
 }

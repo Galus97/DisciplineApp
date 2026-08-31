@@ -7,6 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.ExpenseRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
+import pl.disciplineapp.DisciplineApp.mapper.ExpenseMapper;
 import pl.disciplineapp.DisciplineApp.model.Expense;
 import pl.disciplineapp.DisciplineApp.exception.ExpenseNotFoundException;
 import pl.disciplineapp.DisciplineApp.model.User;
@@ -28,13 +29,15 @@ public class ExpenseService {
     @Transactional(readOnly = true)
     public ExpenseResponse getExpenseResponse(Long expenseId, User user) {
         serviceValidator.throwIfIdIsNotValid(expenseId, ErrorMessages.INVALID_EXPENSE_ID);
-        return ExpenseResponse.fromEntity(getExpenseOrThrowIfNotExist(expenseId, user));
+        return ExpenseMapper.toExpenseResponse(getExpenseOrThrowIfNotExist(expenseId, user));
     }
 
     @Transactional
     public ExpenseResponse saveExpense(ExpenseRequest expenseRequest, User user) {
         serviceValidator.throwIfRequestIsNull(expenseRequest, ErrorMessages.EXPENSE_REQUEST_IS_NULL);
-        return ExpenseResponse.fromEntity(expenseRepository.save(buildExpense(expenseRequest, user)));
+        Expense expense = expenseRepository.save(ExpenseMapper.toExpenseModel(expenseRequest, user));
+
+        return ExpenseMapper.toExpenseResponse(expense);
     }
 
     @Transactional
@@ -54,16 +57,18 @@ public class ExpenseService {
         existingExpense.setTotalValue(expenseRequest.getTotalValue());
         existingExpense.setQuantity(expenseRequest.getQuantity());
         existingExpense.setUnitPrice(expenseRequest.getUnitPrice());
-        //existingExpense.setCreatedAt(expenseRequest.getCreatedAt());
-        //existingExpense.setUser(user);
 
-        return ExpenseResponse.fromEntity(expenseRepository.save(existingExpense));
+        return ExpenseMapper.toExpenseResponse(expenseRepository.save(existingExpense));
     }
 
     @Transactional(readOnly = true)
     public List<ExpenseResponse> getAllExpense(User user) {
         serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
-        return ExpenseResponse.fromEntityList(expenseRepository.findAllByUser(user));
+
+        return expenseRepository.findAllByUser(user)
+                .stream()
+                .map(ExpenseMapper::toExpenseResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -79,8 +84,11 @@ public class ExpenseService {
         try {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
-            return ExpenseResponse.fromEntityList(
-                    expenseRepository.findAllByUserAndCreatedAtBetween(user, fromDateTime, toDateTime));
+
+            return expenseRepository.findAllByUserAndCreatedAtBetween(user, fromDateTime, toDateTime)
+                    .stream()
+                    .map(ExpenseMapper::toExpenseResponse)
+                    .toList();
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
         }

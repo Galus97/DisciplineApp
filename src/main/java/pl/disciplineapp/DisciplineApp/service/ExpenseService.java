@@ -94,17 +94,6 @@ public class ExpenseService {
         }
     }
 
-    private Expense buildExpense(ExpenseRequest expenseRequest, User user) {
-        return Expense.builder()
-                .expenseType(expenseRequest.getExpenseType())
-                .expenseDescription(expenseRequest.getExpenseDescription())
-                .totalValue(expenseRequest.getTotalValue())
-                .quantity(expenseRequest.getQuantity())
-                .unitPrice(expenseRequest.getUnitPrice())
-                .user(user)
-                .build();
-    }
-
     private Expense getExpenseOrThrowIfNotExist(Long expenseId, User user) {
         return expenseRepository.findByExpenseIdAndUser(expenseId, user)
                 .orElseThrow(() -> new ExpenseNotFoundException(

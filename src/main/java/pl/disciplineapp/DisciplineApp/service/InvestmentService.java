@@ -7,6 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.InvestmentRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
+import pl.disciplineapp.DisciplineApp.mapper.InvestmentMapper;
 import pl.disciplineapp.DisciplineApp.model.Investment;
 import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.model.User;
@@ -28,13 +29,14 @@ public class InvestmentService {
     @Transactional(readOnly = true)
     public InvestmentResponse getInvestment(Long investmentId) {
         serviceValidator.throwIfIdIsNotValid(investmentId, ErrorMessages.INVALID_INVESTMENT_ID);
-        return InvestmentResponse.fromEntity(getInvestmentOrThrowIfNotExist(investmentId));
+        return InvestmentMapper.toInvestmentResponse(getInvestmentOrThrowIfNotExist(investmentId));
     }
 
     @Transactional
-    public InvestmentResponse saveInvestment(InvestmentRequest investmentRequest) {
+    public InvestmentResponse saveInvestment(InvestmentRequest investmentRequest, User user) {
         serviceValidator.throwIfRequestIsNull(investmentRequest, ErrorMessages.INVESTMENT_REQUEST_IS_NULL);
-        return InvestmentResponse.fromEntity(investmentRepository.save(buildInvestment(investmentRequest)));
+        Investment investment = investmentRepository.save(InvestmentMapper.toInvestmentModel(investmentRequest, user));
+        return InvestmentMapper.toInvestmentResponse(investment);
     }
 
     @Transactional
@@ -49,7 +51,7 @@ public class InvestmentService {
         existingInvestment.setUnitPrice(investmentRequest.getUnitPrice());
         existingInvestment.setUser(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()));
 
-        return InvestmentResponse.fromEntity(investmentRepository.save(existingInvestment));
+        return InvestmentMapper.toInvestmentResponse(investmentRepository.save(existingInvestment));
     }
 
     @Transactional
@@ -62,7 +64,11 @@ public class InvestmentService {
     public List<InvestmentResponse> getAllInvestment(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         User user = userService.getUserOrThrowIfNotExist(userId);
-        return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser(user));
+
+        return investmentRepository.findAllByUser(user)
+                .stream()
+                .map(InvestmentMapper::toInvestmentResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -77,21 +83,15 @@ public class InvestmentService {
         try {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
-            return InvestmentResponse.fromEntityList(
-                    investmentRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+
+            return investmentRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime)
+                    .stream()
+                    .map(InvestmentMapper::toInvestmentResponse)
+                    .toList();
+
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
         }
-    }
-
-    private Investment buildInvestment(InvestmentRequest investmentRequest) {
-        return Investment.builder()
-                .investmentType(investmentRequest.getInvestmentType())
-                .totalValue(investmentRequest.getTotalValue())
-                .quantity(investmentRequest.getQuantity())
-                .unitPrice(investmentRequest.getUnitPrice())
-                .user(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()))
-                .build();
     }
 
     private Investment getInvestmentOrThrowIfNotExist(Long investmentId) {

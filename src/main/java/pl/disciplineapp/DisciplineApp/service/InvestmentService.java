@@ -7,6 +7,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.InvestmentRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.InvestmentResponse;
+import pl.disciplineapp.DisciplineApp.mapper.InvestmentMapper;
 import pl.disciplineapp.DisciplineApp.model.Investment;
 import pl.disciplineapp.DisciplineApp.exception.InvestmentNotFoundException;
 import pl.disciplineapp.DisciplineApp.model.User;
@@ -26,50 +27,53 @@ public class InvestmentService {
     private final ServiceValidator serviceValidator;
 
     @Transactional(readOnly = true)
-    public InvestmentResponse getInvestment(Long investmentId) {
+    public InvestmentResponse getInvestment(Long investmentId, User user) {
         serviceValidator.throwIfIdIsNotValid(investmentId, ErrorMessages.INVALID_INVESTMENT_ID);
-        return InvestmentResponse.fromEntity(getInvestmentOrThrowIfNotExist(investmentId));
+
+        return InvestmentMapper.toInvestmentResponse(getInvestmentOrThrowIfNotExist(investmentId, user));
     }
 
     @Transactional
-    public InvestmentResponse saveInvestment(InvestmentRequest investmentRequest) {
+    public InvestmentResponse saveInvestment(InvestmentRequest investmentRequest, User user) {
         serviceValidator.throwIfRequestIsNull(investmentRequest, ErrorMessages.INVESTMENT_REQUEST_IS_NULL);
-        return InvestmentResponse.fromEntity(investmentRepository.save(buildInvestment(investmentRequest)));
+        Investment investment = investmentRepository.save(InvestmentMapper.toInvestmentModel(investmentRequest, user));
+        return InvestmentMapper.toInvestmentResponse(investment);
     }
 
     @Transactional
-    public InvestmentResponse updateInvestment(InvestmentRequest investmentRequest) {
+    public InvestmentResponse updateInvestment(InvestmentRequest investmentRequest, User user) {
         serviceValidator.throwIfRequestIsNull(investmentRequest, ErrorMessages.INVESTMENT_REQUEST_IS_NULL);
         serviceValidator.throwIfIdIsNotValid(investmentRequest.getInvestmentId(), ErrorMessages.INVALID_INVESTMENT_ID);
 
-        Investment existingInvestment = getInvestmentOrThrowIfNotExist(investmentRequest.getInvestmentId());
+        Investment existingInvestment = getInvestmentOrThrowIfNotExist(investmentRequest.getInvestmentId(), user);
         existingInvestment.setInvestmentType(investmentRequest.getInvestmentType());
         existingInvestment.setTotalValue(investmentRequest.getTotalValue());
         existingInvestment.setQuantity(investmentRequest.getQuantity());
         existingInvestment.setUnitPrice(investmentRequest.getUnitPrice());
         existingInvestment.setUser(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()));
 
-        return InvestmentResponse.fromEntity(investmentRepository.save(existingInvestment));
+        return InvestmentMapper.toInvestmentResponse(investmentRepository.save(existingInvestment));
     }
 
     @Transactional
-    public void deleteInvestment(Long investmentId) {
+    public void deleteInvestment(Long investmentId, User user) {
         serviceValidator.throwIfIdIsNotValid(investmentId, ErrorMessages.INVALID_INVESTMENT_ID);
-        investmentRepository.delete(getInvestmentOrThrowIfNotExist(investmentId));
+        investmentRepository.delete(getInvestmentOrThrowIfNotExist(investmentId, user));
     }
 
     @Transactional(readOnly = true)
-    public List<InvestmentResponse> getAllInvestment(Long userId) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        User user = userService.getUserOrThrowIfNotExist(userId);
-        return InvestmentResponse.fromEntityList(investmentRepository.findAllByUser(user));
+    public List<InvestmentResponse> getAllInvestment(User user) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
+
+        return investmentRepository.findAllByUser(user)
+                .stream()
+                .map(InvestmentMapper::toInvestmentResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<InvestmentResponse> getInvestmentsBetweenDates(Long userId, String from, String to) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        //This throws exception if user doesn't exist
-        userService.getUserOrThrowIfNotExist(userId);
+    public List<InvestmentResponse> getInvestmentsBetweenDates(String from, String to, User user) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
 
         if (from == null || to == null) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);
@@ -77,26 +81,20 @@ public class InvestmentService {
         try {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
-            return InvestmentResponse.fromEntityList(
-                    investmentRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+
+            return investmentRepository.findAllByUserIdAndCreatedAtBetween(user.getUserId(), fromDateTime, toDateTime)
+                    .stream()
+                    .map(InvestmentMapper::toInvestmentResponse)
+                    .toList();
+
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
         }
     }
 
-    private Investment buildInvestment(InvestmentRequest investmentRequest) {
-        return Investment.builder()
-                .investmentType(investmentRequest.getInvestmentType())
-                .totalValue(investmentRequest.getTotalValue())
-                .quantity(investmentRequest.getQuantity())
-                .unitPrice(investmentRequest.getUnitPrice())
-                .user(userService.getUserOrThrowIfNotExist(investmentRequest.getUserId()))
-                .build();
-    }
-
-    private Investment getInvestmentOrThrowIfNotExist(Long investmentId) {
-        return investmentRepository.findById(investmentId).orElseThrow(
-                () -> new InvestmentNotFoundException(messageService.getMessage(
+    private Investment getInvestmentOrThrowIfNotExist(Long investmentId, User user) {
+        return investmentRepository.findByInvestmentIdAndUser(investmentId, user)
+                .orElseThrow(() -> new InvestmentNotFoundException(messageService.getMessage(
                         ErrorMessages.INVESTMENT_NOT_FOUND, investmentId)));
     }
 }

@@ -8,10 +8,13 @@ import pl.disciplineapp.DisciplineApp.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface InvestmentRepository extends JpaRepository<Investment, Long> {
 
     List<Investment> findAllByUser(User user);
+
+    Optional<Investment> findByInvestmentIdAndUser(Long investmentId, User user);
 
     @Query("SELECT i FROM Investment i WHERE i.user.userId = :userId AND i.createdAt BETWEEN :from AND :to")
     List<Investment> findAllByUserIdAndCreatedAtBetween(

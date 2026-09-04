@@ -12,7 +12,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByUser_UserId(Long userId);
 
-    @Query("SELECT T FROM Task t WHERE t.user.userId = :userId AND t.createdAt BETWEEN :from AND :to")
+    @Query("SELECT t FROM Task t WHERE t.user.userId = :userId AND t.createdAt BETWEEN :from AND :to")
     List<Task> findAllByUserIdAndCreatedAtBetween(
             @Param("userId") Long userId,
             @Param("from") LocalDateTime from,

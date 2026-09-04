@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import pl.disciplineapp.DisciplineApp.component.TextMessages;
-import pl.disciplineapp.DisciplineApp.dto.external.CurrencyResponseDataDto;
-import pl.disciplineapp.DisciplineApp.dto.external.CurrencyRateResponse;
+import pl.disciplineapp.DisciplineApp.dto.external.CurrencyApiResponseDto;
+import pl.disciplineapp.DisciplineApp.dto.external.CurrencyRate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,7 +23,7 @@ public class CurrenciesClient {
     @Value("${currency.api.key}")
     private String apiKey;
 
-    public List<CurrencyRateResponse> getCurrenciesRates(String baseCurrency, List<String> currencies) {
+    public List<CurrencyRate> getCurrenciesRates(String baseCurrency, List<String> currencies) {
         HttpClient httpClient = HttpClient.newHttpClient();
 
         String url = TextMessages.BASE_URL.formatted(
@@ -38,7 +38,7 @@ public class CurrenciesClient {
             HttpResponse<String> response =
                     httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            CurrencyResponseDataDto dataDto = objectMapper.readValue(response.body(), CurrencyResponseDataDto.class);
+            CurrencyApiResponseDto dataDto = objectMapper.readValue(response.body(), CurrencyApiResponseDto.class);
             return dataDto.getData().values().stream().toList();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

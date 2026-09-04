@@ -1,8 +1,8 @@
-package pl.disciplineapp.DisciplineApp.dto.internal;
+package pl.disciplineapp.DisciplineApp.dto.response;
 
 import java.math.BigDecimal;
 
-public record CurrencyConversionDto(
+public record CurrencyConversionResponse(
         String baseCurrency,
         String requestedCurrency,
         BigDecimal requestedAmount,

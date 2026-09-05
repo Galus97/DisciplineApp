@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Builder
-@SQLDelete(sql = "UPDATE expenses SET is_deleted = true WHERE expense_id=?")
+@SQLDelete(sql = "UPDATE expenses SET is_deleted = true WHERE expense_id = ?")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor

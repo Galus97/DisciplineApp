@@ -5,6 +5,6 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class CurrencyResponseDataDto {
-    private Map<String, CurrencyRateResponse> data;
+public class CurrencyApiResponseDto {
+    private Map<String, CurrencyRate> data;
 }

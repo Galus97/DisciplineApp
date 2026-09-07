@@ -14,7 +14,7 @@ public class SavingRequest {
     @NotBlank
     private String savingType;
     @NotNull
-    private Float TotalValue;
+    private Float totalValue;
     @NotNull
     private Float quantity;
     @NotNull

@@ -7,8 +7,10 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.TaskRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
+import pl.disciplineapp.DisciplineApp.mapper.TaskMapper;
 import pl.disciplineapp.DisciplineApp.model.Task;
 import pl.disciplineapp.DisciplineApp.exception.TaskNotFoundException;
+import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.repository.TaskRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
@@ -27,13 +29,14 @@ public class TaskService {
     @Transactional(readOnly = true)
     public TaskResponse getTaskResponse(Long taskId) {
         serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
-        return TaskResponse.fromEntity(getTaskOrThrowIfNotExist(taskId));
+        return TaskMapper.toTaskResponse(getTaskOrThrowIfNotExist(taskId));
     }
 
     @Transactional
-    public TaskResponse saveTask(TaskRequest taskRequest) {
+    public TaskResponse saveTask(TaskRequest taskRequest, User user) {
         serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
-        return TaskResponse.fromEntity(taskRepository.save(buildTask(taskRequest)));
+        Task task = TaskMapper.toTaskModel(taskRequest, user);
+        return TaskMapper.toTaskResponse(taskRepository.save(task));
     }
 
     @Transactional
@@ -54,13 +57,16 @@ public class TaskService {
         existingTask.setDeadline(taskRequest.getDeadline());
         existingTask.setUser(userService.getUserOrThrowIfNotExist(taskRequest.getUserId()));
 
-        return TaskResponse.fromEntity(taskRepository.save(existingTask));
+        return TaskMapper.toTaskResponse(taskRepository.save(existingTask));
     }
 
     @Transactional(readOnly = true)
     public List<TaskResponse> getAllTask(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        return TaskResponse.fromEntityList(taskRepository.findAllByUser_UserId(userId));
+        return taskRepository.findAllByUser_UserId(userId)
+                .stream()
+                .map(TaskMapper::toTaskResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -76,28 +82,17 @@ public class TaskService {
         try {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
-            return TaskResponse.fromEntityList(
-                    taskRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+            return taskRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime)
+                    .stream()
+                    .map(TaskMapper::toTaskResponse)
+                    .toList();
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
         }
-    }
-
-    private Task buildTask(TaskRequest taskRequest) {
-        return Task.builder()
-                .taskName(taskRequest.getTaskName())
-                .description(taskRequest.getDescription())
-                .completed(taskRequest.isCompleted())
-                .createdAt(taskRequest.getCreatedAt())
-                .completedAt(taskRequest.getCompletedAt())
-                .deadline(taskRequest.getDeadline())
-                .user(userService.getUserOrThrowIfNotExist(taskRequest.getUserId()))
-                .build();
     }
 
     private Task getTaskOrThrowIfNotExist(Long taskId) {
         return taskRepository.findById(taskId).orElseThrow(
                 () -> new TaskNotFoundException(messageService.getMessage(ErrorMessages.TASK_NOT_FOUND, taskId)));
     }
-
 }

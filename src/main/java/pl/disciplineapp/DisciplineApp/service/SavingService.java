@@ -7,8 +7,10 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.SavingRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.SavingResponse;
+import pl.disciplineapp.DisciplineApp.mapper.SavingMapper;
 import pl.disciplineapp.DisciplineApp.model.Saving;
 import pl.disciplineapp.DisciplineApp.exception.SavingNotFoundException;
+import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.repository.SavingRepository;
 import pl.disciplineapp.DisciplineApp.util.ServiceValidator;
 
@@ -27,13 +29,14 @@ public class SavingService {
     @Transactional(readOnly = true)
     public SavingResponse getSavingResponse(Long savingId) {
         serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
-        return SavingResponse.fromEntity(getSavingOrThrowIfNotExist(savingId));
+        return SavingMapper.toSavingResponse(getSavingOrThrowIfNotExist(savingId));
     }
 
     @Transactional
-    public SavingResponse saveSaving(SavingRequest savingRequest) {
+    public SavingResponse saveSaving(SavingRequest savingRequest, User user) {
         serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
-        return SavingResponse.fromEntity(savingRepository.save(buildSaving(savingRequest)));
+        Saving saving = SavingMapper.toSavingModel(savingRequest, user);
+        return SavingMapper.toSavingResponse(savingRepository.save(saving));
     }
 
     @Transactional
@@ -54,13 +57,17 @@ public class SavingService {
         existingSaving.setUnitPrice(savingRequest.getUnitPrice());
         existingSaving.setUser(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()));
 
-        return SavingResponse.fromEntity(savingRepository.save(existingSaving));
+        return SavingMapper.toSavingResponse(savingRepository.save(existingSaving));
     }
 
     @Transactional(readOnly = true)
     public List<SavingResponse> getAllSaving(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        return SavingResponse.fromEntityList(savingRepository.findAllByUser_UserId(userId));
+
+        return savingRepository.findAllByUser_UserId(userId)
+                .stream()
+                .map(SavingMapper::toSavingResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -76,21 +83,13 @@ public class SavingService {
         try {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
-            return SavingResponse.fromEntityList(
-                    savingRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime));
+            return savingRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime)
+                    .stream()
+                    .map(SavingMapper::toSavingResponse)
+                    .toList();
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_FORMAT_PARAMS);
         }
-    }
-
-    private Saving buildSaving(SavingRequest savingRequest) {
-        return Saving.builder()
-                .savingType(savingRequest.getSavingType())
-                .totalValue(savingRequest.getTotalValue())
-                .quantity(savingRequest.getQuantity())
-                .unitPrice(savingRequest.getUnitPrice())
-                .user(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()))
-                .build();
     }
 
     private Saving getSavingOrThrowIfNotExist(Long savingId) {

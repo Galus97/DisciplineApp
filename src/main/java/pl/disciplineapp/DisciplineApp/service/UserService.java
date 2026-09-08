@@ -8,6 +8,7 @@ import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
+import pl.disciplineapp.DisciplineApp.mapper.UserMapper;
 import pl.disciplineapp.DisciplineApp.model.User;
 import pl.disciplineapp.DisciplineApp.exception.UserNotFoundException;
 import pl.disciplineapp.DisciplineApp.exception.ValidationException;
@@ -27,15 +28,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUserResponse(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        return UserResponse.fromEntity(getUserOrThrowIfNotExist(userId));
+        return UserMapper.toUserResponse(getUserOrThrowIfNotExist(userId));
     }
 
     @Transactional
     public UserResponse saveNewUser(UserRequest userRequest) throws ValidationException {
         serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_REQUEST_IS_NULL);
-        User user = buildUser(userRequest);
+        User user = UserMapper.toUserModel(userRequest);
         if(registerValidator.validateUser(user).isEmpty()){
-            return UserResponse.fromEntity(userRepository.save(buildUser(userRequest)));
+            return UserMapper.toUserResponse(userRepository.save(user));
         } else {
             throw new ValidationException(registerValidator.validateUser(user));
         }
@@ -61,18 +62,7 @@ public class UserService {
             existingUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         }
 
-        return UserResponse.fromEntity(userRepository.save(existingUser));
-    }
-
-    private User buildUser(UserRequest userRequest) {
-        return User.builder()
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .email(userRequest.getEmail())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .enabled(userRequest.getEnabled())
-                .isSubscriber(userRequest.getIsSubscriber())
-                .build();
+        return UserMapper.toUserResponse(userRepository.save(existingUser));
     }
 
     //Using this method in others Services

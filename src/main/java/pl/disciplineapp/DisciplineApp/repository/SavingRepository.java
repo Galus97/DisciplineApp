@@ -9,13 +9,16 @@ import pl.disciplineapp.DisciplineApp.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface SavingRepository extends JpaRepository<Saving, Long> {
 
     List<Saving> findAllByUser(User user, Pageable pageable);
 
+    Optional<Saving> findByIdAndUser(Long id, User user);
+
     @Query("SELECT s FROM Saving s WHERE s.user = :user AND s.createdAt BETWEEN :from AND :to")
-    List<Saving> findAllByUserIdAndCreatedAtBetween(
+    List<Saving> findAllByUserAndCreatedAtBetween(
             @Param("user") User user,
             @Param("from") LocalDateTime from,
             @Param("to") LocalDateTime to,

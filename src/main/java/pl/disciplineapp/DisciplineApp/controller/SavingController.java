@@ -50,9 +50,8 @@ public class SavingController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user")
     public ResponseEntity<List<SavingResponse>> getSavings(
-            @PathVariable Long userId,
             @RequestParam(required = false) String from,
             @RequestParam(required = false) String to,
             @AuthenticationPrincipal User user,

@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,14 +23,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-    private final UserService userService;
     private final ServiceValidator serviceValidator;
     private final MessageService messageService;
 
     @Transactional(readOnly = true)
-    public TaskResponse getTaskResponse(Long taskId) {
+    public TaskResponse getTaskResponse(Long taskId, User user) {
         serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
-        return TaskMapper.toTaskResponse(getTaskOrThrowIfNotExist(taskId));
+        return TaskMapper.toTaskResponse(getTaskOrThrowIfNotExist(taskId, user));
     }
 
     @Transactional
@@ -40,40 +40,39 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(Long taskId) {
+    public void deleteTask(Long taskId, User user) {
         serviceValidator.throwIfIdIsNotValid(taskId, ErrorMessages.INVALID_TASK_ID);
-        taskRepository.delete(getTaskOrThrowIfNotExist(taskId));
+        taskRepository.delete(getTaskOrThrowIfNotExist(taskId, user));
     }
 
     @Transactional
-    public TaskResponse updateTask(TaskRequest taskRequest) {
+    public TaskResponse updateTask(TaskRequest taskRequest, User user) {
         serviceValidator.throwIfRequestIsNull(taskRequest, ErrorMessages.TASK_REQUEST_IS_NULL);
-        Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId());
+
+        Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId(), user);
         existingTask.setTaskName(taskRequest.getTaskName());
         existingTask.setDescription(taskRequest.getDescription());
         existingTask.setCompleted(taskRequest.isCompleted());
-        existingTask.setCreatedAt(taskRequest.getCreatedAt());
-        existingTask.setCompletedAt(taskRequest.getCompletedAt());
-        existingTask.setDeadline(taskRequest.getDeadline());
-        existingTask.setUser(userService.getUserOrThrowIfNotExist(taskRequest.getUserId()));
+        existingTask.setCreatedAt(LocalDateTime.parse(taskRequest.getCreatedAt()));
+        existingTask.setCompletedAt(LocalDateTime.parse(taskRequest.getCompletedAt()));
+        existingTask.setDeadline(LocalDateTime.parse(taskRequest.getDeadline()));
+        existingTask.setUser(user);
 
         return TaskMapper.toTaskResponse(taskRepository.save(existingTask));
     }
 
     @Transactional(readOnly = true)
-    public List<TaskResponse> getAllTask(Long userId) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        return taskRepository.findAllByUser_UserId(userId)
+    public List<TaskResponse> getAllTask(User user, Pageable pageable) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
+        return taskRepository.findAllByUser(user, pageable)
                 .stream()
                 .map(TaskMapper::toTaskResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<TaskResponse> getTasksBetweenDates(Long userId, String from, String to) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        //This throws exception if user doesn't exist
-        userService.getUserOrThrowIfNotExist(userId);
+    public List<TaskResponse> getTasksBetweenDates(User user, String from, String to, Pageable pageable) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
 
         if (from == null || to == null) {
            throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);
@@ -82,7 +81,7 @@ public class TaskService {
         try {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
-            return taskRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime)
+            return taskRepository.findAllByUserAndCreatedAtBetween(user, fromDateTime, toDateTime, pageable)
                     .stream()
                     .map(TaskMapper::toTaskResponse)
                     .toList();
@@ -91,8 +90,9 @@ public class TaskService {
         }
     }
 
-    private Task getTaskOrThrowIfNotExist(Long taskId) {
-        return taskRepository.findById(taskId).orElseThrow(
-                () -> new TaskNotFoundException(messageService.getMessage(ErrorMessages.TASK_NOT_FOUND, taskId)));
+    private Task getTaskOrThrowIfNotExist(Long taskId, User user) {
+        return taskRepository.findByIdAndUser(taskId, user).orElseThrow(
+                () -> new TaskNotFoundException(
+                        messageService.getMessage(ErrorMessages.TASK_NOT_FOUND, taskId)));
     }
 }

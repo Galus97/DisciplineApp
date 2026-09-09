@@ -4,14 +4,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.validator.constraints.Length;
 
 @Builder
 @Getter
 public class UserRequest {
     private Long userId;
-    @Size(min = 3)
+    @Length(min = 3)
     private String firstName;
-    @Size(min = 3)
+    @Length(min = 3)
     private String lastName;
     @Email
     @Size(min = 5)

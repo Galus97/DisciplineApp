@@ -19,6 +19,4 @@ public class SavingRequest {
     private Float quantity;
     @NotNull
     private Float unitPrice;
-    @NotNull
-    private Long userId;
 }

@@ -1,6 +1,6 @@
 package pl.disciplineapp.DisciplineApp.mapper;
 
-import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
+import pl.disciplineapp.DisciplineApp.dto.request.UserRegistrationRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.model.User;
 
@@ -16,15 +16,14 @@ public class UserMapper {
         );
     }
 
-    public static User toUserModel(UserRequest userRequest) {
+    public static User toUserModel(UserRegistrationRequest request) {
         return User.builder()
-                .userId(userRequest.getUserId())
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
-                .enabled(userRequest.getEnabled())
-                .isSubscriber(userRequest.getIsSubscriber())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .enabled(false)
+                .isSubscriber(false)
                 .build();
     }
 }

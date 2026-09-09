@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,18 +29,8 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserResponse(id));
     }
 
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
-        try {
-            UserResponse savedUser = userService.saveNewUser(userRequest);
-            return ResponseEntity.created(URI.create("/user/" + savedUser.userId())).body(savedUser);
-        } catch (ValidationException e) {
-            return ResponseEntity.badRequest().body(e.getValidationsErrors());
-        }
-    }
-
     @PutMapping
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity.ok(userService.updateUser(userRequest));
     }
 

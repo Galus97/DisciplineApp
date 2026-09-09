@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.disciplineapp.DisciplineApp.component.ErrorMessages;
 import pl.disciplineapp.DisciplineApp.component.MessageService;
+import pl.disciplineapp.DisciplineApp.dto.request.UserRegistrationRequest;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.mapper.UserMapper;
@@ -22,24 +23,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final MessageService messageService;
     private final PasswordEncoder passwordEncoder;
-    private final RegisterValidator registerValidator;
     private final ServiceValidator serviceValidator;
 
     @Transactional(readOnly = true)
     public UserResponse getUserResponse(Long userId) {
         serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
         return UserMapper.toUserResponse(getUserOrThrowIfNotExist(userId));
-    }
-
-    @Transactional
-    public UserResponse saveNewUser(UserRequest userRequest) throws ValidationException {
-        serviceValidator.throwIfRequestIsNull(userRequest, ErrorMessages.USER_REQUEST_IS_NULL);
-        User user = UserMapper.toUserModel(userRequest);
-        if(registerValidator.validateUser(user).isEmpty()){
-            return UserMapper.toUserResponse(userRepository.save(user));
-        } else {
-            throw new ValidationException(registerValidator.validateUser(user));
-        }
     }
 
     @Transactional
@@ -65,7 +54,6 @@ public class UserService {
         return UserMapper.toUserResponse(userRepository.save(existingUser));
     }
 
-    //Using this method in others Services
     public User getUserOrThrowIfNotExist(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(messageService.getMessage(ErrorMessages.USER_NOT_FOUND, userId)));

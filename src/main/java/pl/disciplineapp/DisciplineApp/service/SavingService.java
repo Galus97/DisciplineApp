@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,59 +23,59 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SavingService {
     private final SavingRepository savingRepository;
-    private final UserService userService;
     private final MessageService messageService;
     private final ServiceValidator serviceValidator;
 
     @Transactional(readOnly = true)
-    public SavingResponse getSavingResponse(Long savingId) {
+    public SavingResponse getSavingResponse(Long savingId, User user) {
         serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
-        return SavingMapper.toSavingResponse(getSavingOrThrowIfNotExist(savingId));
+
+        return SavingMapper.toSavingResponse(getSavingOrThrowIfNotExist(savingId, user));
     }
 
     @Transactional
     public SavingResponse saveSaving(SavingRequest savingRequest, User user) {
         serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
         Saving saving = SavingMapper.toSavingModel(savingRequest, user);
+
         return SavingMapper.toSavingResponse(savingRepository.save(saving));
     }
 
     @Transactional
-    public void deleteSaving(Long savingId) {
+    public void deleteSaving(Long savingId, User user) {
         serviceValidator.throwIfIdIsNotValid(savingId, ErrorMessages.INVALID_SAVING_ID);
-        savingRepository.delete(getSavingOrThrowIfNotExist(savingId));
+        savingRepository.delete(getSavingOrThrowIfNotExist(savingId, user));
     }
 
     @Transactional
-    public SavingResponse updateSaving(SavingRequest savingRequest) {
+    public SavingResponse updateSaving(SavingRequest savingRequest, User user) {
         serviceValidator.throwIfRequestIsNull(savingRequest, ErrorMessages.SAVING_REQUEST_IS_NULL);
         serviceValidator.throwIfIdIsNotValid(savingRequest.getSavingId(), ErrorMessages.INVALID_SAVING_ID);
 
-        Saving existingSaving = getSavingOrThrowIfNotExist(savingRequest.getSavingId());
+        Saving existingSaving = getSavingOrThrowIfNotExist(savingRequest.getSavingId(), user);
+
         existingSaving.setSavingType(savingRequest.getSavingType());
         existingSaving.setTotalValue(savingRequest.getTotalValue());
         existingSaving.setQuantity(savingRequest.getQuantity());
         existingSaving.setUnitPrice(savingRequest.getUnitPrice());
-        existingSaving.setUser(userService.getUserOrThrowIfNotExist(savingRequest.getUserId()));
+        existingSaving.setUser(user);
 
         return SavingMapper.toSavingResponse(savingRepository.save(existingSaving));
     }
 
     @Transactional(readOnly = true)
-    public List<SavingResponse> getAllSaving(Long userId) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
+    public List<SavingResponse> getAllSaving(User user, Pageable pageable) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
 
-        return savingRepository.findAllByUser_UserId(userId)
+        return savingRepository.findAllByUser(user, pageable)
                 .stream()
                 .map(SavingMapper::toSavingResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<SavingResponse> getSavingBetweenDates(Long userId, String from, String to) {
-        serviceValidator.throwIfIdIsNotValid(userId, ErrorMessages.INVALID_USER_ID);
-        //This throws exception if user doesn't exist
-        userService.getUserOrThrowIfNotExist(userId);
+    public List<SavingResponse> getSavingBetweenDates(User user, String from, String to, Pageable pageable) {
+        serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
 
         if (from == null || to == null) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);
@@ -83,7 +84,7 @@ public class SavingService {
         try {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
-            return savingRepository.findAllByUserIdAndCreatedAtBetween(userId, fromDateTime, toDateTime)
+            return savingRepository.findAllByUserAndCreatedAtBetween(user, fromDateTime, toDateTime, pageable)
                     .stream()
                     .map(SavingMapper::toSavingResponse)
                     .toList();
@@ -92,8 +93,9 @@ public class SavingService {
         }
     }
 
-    private Saving getSavingOrThrowIfNotExist(Long savingId) {
-        return savingRepository.findById(savingId).orElseThrow(
-                () -> new SavingNotFoundException(messageService.getMessage(ErrorMessages.SAVING_NOT_FOUND, savingId)));
+    private Saving getSavingOrThrowIfNotExist(Long savingId, User user) {
+        return savingRepository.findBySavingIdAndUser(savingId, user).orElseThrow(
+                () -> new SavingNotFoundException(
+                        messageService.getMessage(ErrorMessages.SAVING_NOT_FOUND, savingId)));
     }
 }

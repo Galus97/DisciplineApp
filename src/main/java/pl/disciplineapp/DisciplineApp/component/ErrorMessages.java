@@ -4,6 +4,7 @@ public final class ErrorMessages {
     public static final String ERROR = "error";
     public static final String INVALID_PARAMS = "error.paramsAreNotValid";
     public static final String INVALID_FORMAT_PARAMS = "error.paramsFormatNotValid";
+    public static final String PASSWORDS_ARE_NOT_EQUALS = "error.passwordsNotEquals";
 
     //USER
     public static final String USER_NOT_FOUND = "error.userNotFound";

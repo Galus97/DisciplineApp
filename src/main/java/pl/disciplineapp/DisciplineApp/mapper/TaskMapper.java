@@ -6,6 +6,8 @@ import pl.disciplineapp.DisciplineApp.dto.response.TaskResponse;
 import pl.disciplineapp.DisciplineApp.model.Task;
 import pl.disciplineapp.DisciplineApp.model.User;
 
+import java.time.LocalDateTime;
+
 @Component
 public class TaskMapper {
     public static TaskResponse toTaskResponse(Task task) {
@@ -27,9 +29,9 @@ public class TaskMapper {
                 .taskName(taskRequest.getTaskName())
                 .description(taskRequest.getDescription())
                 .completed(taskRequest.isCompleted())
-                .createdAt(taskRequest.getCreatedAt())
-                .completedAt(taskRequest.getCompletedAt())
-                .deadline(taskRequest.getDeadline())
+                .createdAt(LocalDateTime.parse(taskRequest.getCreatedAt()))
+                .completedAt(LocalDateTime.parse(taskRequest.getCompletedAt()))
+                .deadline(LocalDateTime.parse(taskRequest.getDeadline()))
                 .user(user)
                 .build();
     }

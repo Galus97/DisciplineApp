@@ -1,30 +1,26 @@
 package pl.disciplineapp.DisciplineApp.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
-@Builder
 @Getter
-public class UserRequest {
-    private Long userId;
-
+@Builder
+public class UserRegistrationRequest {
     @Length(min = 3)
     private String firstName;
 
     @Length(min = 3)
     private String lastName;
 
+    @Length(min = 5)
     @Email
-    @Size(min = 5)
     private String email;
 
-    @Size(min = 5)
+    @Length(min = 5)
     private String password;
 
-    private Boolean enabled;
-
-    private Boolean isSubscriber;
+    @Length(min = 5)
+    private String repeatPassword;
 }

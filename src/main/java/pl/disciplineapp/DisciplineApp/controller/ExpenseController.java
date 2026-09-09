@@ -1,5 +1,6 @@
 package pl.disciplineapp.DisciplineApp.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,23 +20,31 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExpenseResponse> showExpense(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ExpenseResponse> showExpense(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(expenseService.getExpenseResponse(id, user));
     }
 
     @PostMapping
-    public ResponseEntity<ExpenseResponse> saveExpense(@RequestBody ExpenseRequest expenseRequest, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ExpenseResponse> saveExpense(
+            @RequestBody @Valid ExpenseRequest expenseRequest,
+            @AuthenticationPrincipal User user) {
         ExpenseResponse savedExpense = expenseService.saveExpense(expenseRequest, user);
         return ResponseEntity.created(URI.create("/expense/" + savedExpense.expenseId())).body(savedExpense);
     }
 
     @PutMapping
-    public ResponseEntity<ExpenseResponse> updateExpense(@RequestBody ExpenseRequest expenseRequest, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ExpenseResponse> updateExpense(
+            @RequestBody @Valid ExpenseRequest expenseRequest,
+            @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(expenseService.updateExpense(expenseRequest, user));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Void> deleteExpense(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user) {
         expenseService.deleteExpense(id, user);
         return ResponseEntity.noContent().build();
     }

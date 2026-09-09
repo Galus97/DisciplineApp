@@ -1,4 +1,4 @@
-package pl.disciplineapp.DisciplineApp.service;
+package pl.disciplineapp.DisciplineApp.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

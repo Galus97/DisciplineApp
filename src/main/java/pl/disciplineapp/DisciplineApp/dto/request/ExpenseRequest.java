@@ -9,16 +9,22 @@ import lombok.Getter;
 @Builder
 public class ExpenseRequest {
     private Long expenseId;
+
     @NotBlank
     private String expenseType;
+
     @NotBlank
     private String expenseDescription;
+
     @NotNull
     private Float totalValue;
+
     @NotNull
     private Float quantity;
+
     @NotNull
     private Float unitPrice;
+
     @NotNull
     private Long userId;
 }

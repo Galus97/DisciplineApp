@@ -25,7 +25,7 @@ public class RegisterValidator {
         if (ifUserExistByEmail.isPresent()) {
             errors.add(messageService.getMessage(ErrorMessages.EMAIL_IS_ALREADY_USED));
         }
-        if (userRequest.getPassword().equals(userRequest.getRepeatPassword())) {
+        if (!userRequest.getPassword().equals(userRequest.getRepeatPassword())) {
             errors.add(messageService.getMessage(ErrorMessages.PASSWORDS_ARE_NOT_EQUALS));
         }
 

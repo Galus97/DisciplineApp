@@ -11,14 +11,19 @@ import java.time.LocalDateTime;
 @Builder
 public class InvestmentRequest {
     private Long investmentId;
+
     @NotBlank
     private String investmentType;
+
     @NotNull
     private Float totalValue;
+
     @NotNull
     private Float quantity;
+
     @NotNull
     private Float unitPrice;
+
     @NotNull
     private Long userId;
 }

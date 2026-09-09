@@ -74,8 +74,6 @@ public class ExpenseService {
     @Transactional(readOnly = true)
     public List<ExpenseResponse> getExpensesBetweenDates(User user, String from, String to) {
         serviceValidator.throwIfIdIsNotValid(user.getUserId(), ErrorMessages.INVALID_USER_ID);
-        //This throws exception if user doesn't exist
-        userService.getUserOrThrowIfNotExist(user.getUserId());
 
         if (from == null || to == null) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_PARAMS);

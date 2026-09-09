@@ -10,15 +10,21 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 public class UserRequest {
     private Long userId;
+
     @Length(min = 3)
     private String firstName;
+
     @Length(min = 3)
     private String lastName;
+
     @Email
     @Size(min = 5)
     private String email;
+
     @Size(min = 5)
     private String password;
+
     private Boolean enabled;
+
     private Boolean isSubscriber;
 }

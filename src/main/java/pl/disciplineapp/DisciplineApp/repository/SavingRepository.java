@@ -15,7 +15,7 @@ public interface SavingRepository extends JpaRepository<Saving, Long> {
 
     List<Saving> findAllByUser(User user, Pageable pageable);
 
-    Optional<Saving> findByIdAndUser(Long id, User user);
+    Optional<Saving> findBySavingIdAndUser(Long id, User user);
 
     @Query("SELECT s FROM Saving s WHERE s.user = :user AND s.createdAt BETWEEN :from AND :to")
     List<Saving> findAllByUserAndCreatedAtBetween(

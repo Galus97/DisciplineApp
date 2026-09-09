@@ -15,7 +15,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByUser(User user, Pageable pageable);
 
-    Optional<Task> findByIdAndUser(Long id, User user);
+    Optional<Task> findByTaskIdAndUser(Long id, User user);
 
     @Query("SELECT t FROM Task t WHERE t.user= :user AND t.createdAt BETWEEN :from AND :to")
     List<Task> findAllByUserAndCreatedAtBetween(

@@ -11,12 +11,16 @@ import java.time.LocalDateTime;
 @Builder
 public class SavingRequest {
     private Long savingId;
+
     @NotBlank
     private String savingType;
+
     @NotNull
     private Float totalValue;
+
     @NotNull
     private Float quantity;
+
     @NotNull
     private Float unitPrice;
 }

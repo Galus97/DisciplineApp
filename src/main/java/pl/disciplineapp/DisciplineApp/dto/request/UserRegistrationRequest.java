@@ -1,8 +1,12 @@
 package pl.disciplineapp.DisciplineApp.dto.request;
 
 import jakarta.validation.constraints.Email;
+import lombok.Builder;
+import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
+@Getter
+@Builder
 public class UserRegistrationRequest {
     @Length(min = 3)
     private String firstName;

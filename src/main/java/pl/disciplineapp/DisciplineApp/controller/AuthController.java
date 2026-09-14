@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.disciplineapp.DisciplineApp.dto.request.UserLoginRequest;
 import pl.disciplineapp.DisciplineApp.dto.request.UserRegistrationRequest;
+import pl.disciplineapp.DisciplineApp.dto.response.UserLoginResponse;
 import pl.disciplineapp.DisciplineApp.dto.response.UserResponse;
 import pl.disciplineapp.DisciplineApp.exception.ValidationException;
+import pl.disciplineapp.DisciplineApp.security.AuthenticationService;
 import pl.disciplineapp.DisciplineApp.service.auth.RegistrationUserService;
 
 import java.net.URI;
@@ -20,17 +22,22 @@ import java.net.URI;
 @RequestMapping("/auth")
 public class AuthController {
     private final RegistrationUserService registrationService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody @Valid UserLoginRequest request) {
-        return ResponseEntity.ok().build();
+    public UserLoginResponse login(@RequestBody @Valid UserLoginRequest request) {
+        return authenticationService.authenticate(request);
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserResponse> register(@RequestBody @Valid UserRegistrationRequest request) throws ValidationException {
-        UserResponse userResponse = registrationService.saveNewUser(request);
-        return ResponseEntity
-                .created(URI.create("/auth/registration/" + userResponse.userId()))
-                .body(userResponse);
+    public ResponseEntity<?> register(@RequestBody @Valid UserRegistrationRequest request){
+        try {
+            UserResponse userResponse = registrationService.saveNewUser(request);
+            return ResponseEntity
+                    .created(URI.create("/auth/registration/" + userResponse.userId()))
+                    .body(userResponse);
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getValidationsErrors());
+        }
     }
 }

@@ -12,13 +12,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Goal {
+@Table(name = "goal_steps")
+public class GoalStep {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long goalId;
+    private Long goalStepId;
 
     @NotBlank
     private String title;
 
     private String description;
+
+    @OneToMany
+    @Column(name = "main_goal_id")
+    private Goal goal;
 }

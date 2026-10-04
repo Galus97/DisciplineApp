@@ -23,4 +23,8 @@ public class GoalStep {
     private String title;
 
     private String description;
+
+    @OneToMany
+    @Column(name = "main_goal_id")
+    private Goal goal;
 }

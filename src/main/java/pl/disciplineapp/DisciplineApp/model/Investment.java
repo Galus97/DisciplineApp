@@ -28,6 +28,8 @@ public class Investment {
     @NotBlank
     private String investmentType;
 
+    private String investmentDescription;
+
     @NotNull
     private Float totalValue;
 

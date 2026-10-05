@@ -28,6 +28,8 @@ public class Saving {
     @NotBlank
     private String savingType;
 
+    private String savingDescription;
+
     @NotNull
     private Float totalValue;
 

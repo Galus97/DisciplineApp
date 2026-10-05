@@ -30,7 +30,7 @@ public class GoalStep {
     @NotBlank
     private String title;
 
-    private String description;
+    private String goalStepDescription;
 
     @CreationTimestamp
     private LocalDateTime deadline;

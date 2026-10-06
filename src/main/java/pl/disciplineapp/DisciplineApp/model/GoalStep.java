@@ -35,6 +35,10 @@ public class GoalStep {
     @CreationTimestamp
     private LocalDateTime deadline;
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
     @OneToMany
     @Column(name = "main_goal_id")
     private Goal goal;

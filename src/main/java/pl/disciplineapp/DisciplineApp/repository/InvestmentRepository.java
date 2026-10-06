@@ -16,9 +16,9 @@ public interface InvestmentRepository extends JpaRepository<Investment, Long> {
 
     Optional<Investment> findByInvestmentIdAndUser(Long investmentId, User user);
 
-    @Query("SELECT i FROM Investment i WHERE i.user.userId = :userId AND i.createdAt BETWEEN :from AND :to")
+    @Query("SELECT i FROM Investment i WHERE i.user = :user AND i.createdAt BETWEEN :from AND :to")
     List<Investment> findAllByUserIdAndCreatedAtBetween(
-            @Param("userId") Long userId,
+            @Param("user") User user,
             @Param("from")LocalDateTime from,
             @Param("to") LocalDateTime to);
 }

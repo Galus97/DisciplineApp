@@ -82,7 +82,7 @@ public class InvestmentService {
             LocalDateTime fromDateTime = LocalDateTime.parse(from);
             LocalDateTime toDateTime = LocalDateTime.parse(to);
 
-            return investmentRepository.findAllByUserIdAndCreatedAtBetween(user.getUserId(), fromDateTime, toDateTime)
+            return investmentRepository.findAllByUserIdAndCreatedAtBetween(user, fromDateTime, toDateTime)
                     .stream()
                     .map(InvestmentMapper::toInvestmentResponse)
                     .toList();

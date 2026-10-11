@@ -51,7 +51,7 @@ public class TaskService {
 
         Task existingTask = getTaskOrThrowIfNotExist(taskRequest.getTaskId(), user);
         existingTask.setTaskName(taskRequest.getTaskName());
-        existingTask.setDescription(taskRequest.getDescription());
+        existingTask.setTaskDescription(taskRequest.getDescription());
         existingTask.setCompleted(taskRequest.isCompleted());
         existingTask.setCreatedAt(LocalDateTime.parse(taskRequest.getCreatedAt()));
         existingTask.setCompletedAt(LocalDateTime.parse(taskRequest.getCompletedAt()));

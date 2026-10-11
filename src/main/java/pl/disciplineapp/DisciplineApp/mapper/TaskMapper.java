@@ -14,7 +14,7 @@ public class TaskMapper {
         return new TaskResponse(
                 task.getTaskId(),
                 task.getTaskName(),
-                task.getDescription(),
+                task.getTaskDescription(),
                 task.isCompleted(),
                 task.getCreatedAt(),
                 task.getCompletedAt(),
@@ -27,7 +27,7 @@ public class TaskMapper {
         return Task.builder()
                 .taskId(taskRequest.getTaskId())
                 .taskName(taskRequest.getTaskName())
-                .description(taskRequest.getDescription())
+                .taskDescription(taskRequest.getDescription())
                 .completed(taskRequest.isCompleted())
                 .createdAt(LocalDateTime.parse(taskRequest.getCreatedAt()))
                 .completedAt(LocalDateTime.parse(taskRequest.getCompletedAt()))

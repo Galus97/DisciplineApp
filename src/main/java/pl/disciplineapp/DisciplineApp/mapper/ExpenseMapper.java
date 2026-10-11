@@ -1,17 +1,13 @@
 package pl.disciplineapp.DisciplineApp.mapper;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.disciplineapp.DisciplineApp.dto.request.ExpenseRequest;
 import pl.disciplineapp.DisciplineApp.dto.response.ExpenseResponse;
 import pl.disciplineapp.DisciplineApp.model.Expense;
 import pl.disciplineapp.DisciplineApp.model.User;
-import pl.disciplineapp.DisciplineApp.service.UserService;
 
 @Component
-@RequiredArgsConstructor
 public class ExpenseMapper {
-    private final UserService userService;
 
     public static ExpenseResponse toExpenseResponse(Expense expense) {
         return new ExpenseResponse(
